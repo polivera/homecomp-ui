@@ -12,7 +12,8 @@ const router = createRouter({
         {
             path: '/login',
             name: 'login',
-            component: LoginFormView
+            component: LoginFormView,
+            meta: {layout: 'simple'}
         },
         {
             path: '/',

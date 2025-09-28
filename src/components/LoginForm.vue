@@ -6,6 +6,8 @@ import {useAuth} from "@/composable/useAuth.ts";
 import type {UseAuth, LoginCredentials} from "@/composable/useAuth.ts";
 import {reactive, ref} from "vue";
 import {useRouter} from "vue-router";
+import { Loader2 } from "lucide-vue-next"
+
 
 
 interface LoginFormProps {
@@ -61,16 +63,17 @@ const submitLogin = async () => {
         </div>
         <Input id="password" type="password" v-model="loginForm.password" required/>
       </div>
-      <Button type="submit" variant="default" class="w-full cursor-pointer">
+      <Button type="submit" variant="default" class="w-full cursor-pointer" :disabled="auth.isLoading.value">
+        <Loader2 class="w-4 h-4 mr-2 animate-spin" v-if="auth.isLoading.value"/>
         Login
       </Button>
     </div>
-    <div class="text-center text-sm">
-      Don't have an account?
-      <a href="#" class="underline underline-offset-4">
-        Sign up
-      </a>
-    </div>
+<!--    <div class="text-center text-sm">-->
+<!--      Don't have an account?-->
+<!--      <a href="#" class="underline underline-offset-4">-->
+<!--        Sign up-->
+<!--      </a>-->
+<!--    </div>-->
   </form>
 </template>
 

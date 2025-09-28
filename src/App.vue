@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
-import { useAuth } from '@/composable/useAuth.ts'
+import {RouterView, useRoute} from 'vue-router'
+import AppLayout from "@/layout/AppLayout.vue";
+
+const route = useRoute();
 
 </script>
 
 <template>
-  <RouterView />
+  <RouterView v-if="route.meta.layout === 'simple'"/>
+  <AppLayout v-else>
+    <RouterView />
+  </AppLayout>
 </template>
 
 <style scoped>
