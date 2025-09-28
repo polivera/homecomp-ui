@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import {cn} from "@/lib/utils.ts";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Label} from "@/components/ui/label";
 import {useAuth} from "@/composable/useAuth.ts";
 import type {UseAuth, LoginCredentials} from "@/composable/useAuth.ts";
 import {reactive, ref} from "vue";
+import {useRouter} from "vue-router";
+
 
 interface LoginFormProps {
   email: string;
   password: string
 }
+
+const router = useRouter();
 
 const auth: UseAuth = useAuth();
 const loginForm = reactive<LoginFormProps>({
@@ -28,9 +31,8 @@ const submitLogin = async () => {
     password: loginForm.password,
   }
   const response = await auth.login(loginCredentials);
-
   if (response.success) {
-    console.log('Login successful')
+    await router.push({name: 'dashboard'});
     return;
   }
   messageClass.value = 'text-red-500';
@@ -44,7 +46,7 @@ const submitLogin = async () => {
       <h1 class="text-2xl font-bold">
         Login to your account
       </h1>
-      <p class="text-balance text-sm {{messageText}}">
+      <p class="text-balance text-sm" :class="messageClass">
         {{ messageText }}
       </p>
     </div>

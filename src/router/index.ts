@@ -1,5 +1,10 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import LoginFormView from "@/views/LoginFormView.vue";
+import Dashboard from "@/views/Dashboard.vue";
+import {useAuth} from "@/composable/useAuth.ts";
+import {ref} from "vue";
+
+const auth = useAuth();
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -9,6 +14,11 @@ const router = createRouter({
             name: 'login',
             component: LoginFormView
         },
+        {
+            path: '/',
+            name: 'dashboard',
+            component: Dashboard,
+        }
         // {
         //     path: '/about',
         //     name: 'about',
@@ -18,6 +28,16 @@ const router = createRouter({
         //     component: () => import('../views/AboutView.vue'),
         // },
     ],
+})
+
+router.beforeEach((to, from, next) => {
+    if (to.path === '/login' && auth.isAuthenticated.value) {
+        return next('/');
+    }
+    if (to.path !== '/login' && !auth.isAuthenticated.value) {
+        next('/login');
+    }
+    next();
 })
 
 export default router

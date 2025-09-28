@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
+import { useAuth } from '@/composable/useAuth.ts'
+
 </script>
 
 <template>

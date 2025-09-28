@@ -19,6 +19,7 @@ export interface AuthResponse {
 
 export interface UseAuth {
     isLoading: ComputedRef<boolean>;
+    isAuthenticated: ComputedRef<boolean>;
     user: ComputedRef<User | null>;
     login: (credentials: LoginCredentials) => Promise<AuthResponse>;
     getUserData: () => User | null;
@@ -29,7 +30,6 @@ const USER_DATA_STORAGE_KEY = "xap-user" as const;
 const compState = {
     isLoading: ref<boolean>(false),
     isAuthenticated: ref<boolean>(false),
-    isInitialized: ref<boolean>(false),
 }
 
 const user = ref<User | null>(null)
@@ -38,6 +38,7 @@ const init = () => {
     const jsonUser = localStorage.getItem(USER_DATA_STORAGE_KEY);
     if (jsonUser) {
         user.value = JSON.parse(jsonUser);
+        compState.isAuthenticated.value = true;
     }
 }
 
@@ -49,7 +50,13 @@ const getUserLocalStorage = (): User | null => {
     return null;
 }
 
-const setUserLocalStorage = (user: User) => {
+const setUserLocalStorage = (user: User | null) => {
+    if (!user) {
+        localStorage.removeItem(USER_DATA_STORAGE_KEY);
+        compState.isAuthenticated.value = false;
+        return;
+    }
+    compState.isAuthenticated.value = true;
     localStorage.setItem(USER_DATA_STORAGE_KEY, JSON.stringify(user));
 }
 
@@ -81,13 +88,13 @@ const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
             }
         }
 
-        localStorage.setItem('isAuthenticated', 'false');
+        setUserLocalStorage(null)
         return {
             success: false,
             message: 'Invalid email or password'
         }
     } catch (error) {
-        localStorage.setItem('isAuthenticated', 'false');
+        setUserLocalStorage(null)
         return {
             success: false,
             message: 'Login failed. Please try again later',
@@ -98,8 +105,10 @@ const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
 }
 
 export const useAuth = (): UseAuth => {
+    init();
     return {
         isLoading: computed(() => compState.isLoading.value),
+        isAuthenticated: computed(() => compState.isAuthenticated.value),
         user: computed(() => user.value),
         login,
         getUserData,
