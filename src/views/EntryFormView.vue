@@ -21,7 +21,7 @@ const {accounts, getAccounts, isLoading: accountsLoading, error: accountsError} 
 
 const formSchema = toTypedSchema(z.object({
   entryType: z.string(),
-  amount: z.number().min(1),
+  amount: z.number().positive().multipleOf(0.01),
   description: z.string().min(1),
   date: z.string(),
   account: z.number().refine((value) => accounts.value.some(account => account.id === value), {}),
@@ -79,7 +79,7 @@ onMounted(async () => {
       <FormItem class="mt-4">
         <FormLabel>Amount</FormLabel>
         <FormControl>
-          <Input v-bind="componentField" type="number" class="w-full"/>
+          <Input v-bind="componentField" step="0.01" type="number" class="w-full"/>
         </FormControl>
       </FormItem>
     </FormField>
@@ -118,7 +118,7 @@ onMounted(async () => {
             <SelectContent>
               <SelectGroup>
                 <SelectItem v-for="item in accounts" :key="item.id" :value="item.id">
-                  {{ item.name }}
+                  {{ item.name }} ({{item.currency}} {{item.balance}})
                 </SelectItem>
               </SelectGroup>
             </SelectContent>
