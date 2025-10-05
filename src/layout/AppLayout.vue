@@ -1,18 +1,20 @@
 <script setup lang="ts">
 
+import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
+import AppSidebar from "@/components/AppSidebar.vue";
+
 </script>
 
 <template>
-  <div class="dashboard-wrapper">
-    <div> header </div>
-    <div class="main-container">
-      <div> sidebar </div>
-      <main class="content">
-        <slot /> <!-- Page content goes here -->
-      </main>
-    </div>
-    <div> footer </div>
-  </div>
+  <SidebarProvider>
+    <AppSidebar />
+    <main class="w-full">
+      <SidebarTrigger />
+      <div class="m-4">
+        <RouterView />
+      </div>
+    </main>
+  </SidebarProvider>
 </template>
 
 <style scoped>

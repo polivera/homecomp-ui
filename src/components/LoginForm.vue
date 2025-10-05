@@ -68,12 +68,6 @@ const submitLogin = async () => {
         Login
       </Button>
     </div>
-<!--    <div class="text-center text-sm">-->
-<!--      Don't have an account?-->
-<!--      <a href="#" class="underline underline-offset-4">-->
-<!--        Sign up-->
-<!--      </a>-->
-<!--    </div>-->
   </form>
 </template>
 
