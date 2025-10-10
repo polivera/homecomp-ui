@@ -13,7 +13,7 @@ const isLoading = ref<boolean>(false)
 const accounts = ref<Account[]>([])
 const error = ref<string | null>(null)
 
-const getAccounts = async (): Promise<void> => {
+const fetchAccounts = async (): Promise<void> => {
     isLoading.value = true
 
     try {
@@ -47,7 +47,6 @@ const getAccounts = async (): Promise<void> => {
                 owned: false,
             }
         ]
-
     } catch (fetchError) {
         error.value = 'Failed to fetch accounts'
     } finally {
@@ -60,6 +59,6 @@ export const useAccounts = () => {
         isLoading: computed(() => isLoading.value),
         accounts: computed(() => accounts.value),
         error: computed(() => error.value),
-        getAccounts
+        fetchAccounts
     };
 }

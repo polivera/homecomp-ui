@@ -16,8 +16,12 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {useAccounts} from "@/composable/useAccounts.ts";
 import {onMounted} from "vue";
+import {useCategories} from "@/composable/useCategories.ts";
+import {useEntries} from "@/composable/useEntry.ts";
 
-const {accounts, getAccounts, isLoading: accountsLoading, error: accountsError} = useAccounts();
+const {accounts, fetchAccounts, isLoading: accountsLoading, error: accountsError} = useAccounts();
+const {categoryFetch, fetchCategories} = useCategories();
+const {entryStore, storeEntry} = useEntries()
 
 const formSchema = toTypedSchema(z.object({
   entryType: z.string(),
@@ -25,6 +29,10 @@ const formSchema = toTypedSchema(z.object({
   description: z.string().min(1),
   date: z.string(),
   account: z.number().refine((value) => accounts.value.some(account => account.id === value), {}),
+  category: z.number().refine(
+      (value) => categoryFetch.value.categories.some(category => category.id === value),
+      {}
+  ),
 }))
 
 const form = useForm({
@@ -41,16 +49,25 @@ const formSubmit = form.handleSubmit((values) => {
     ...values,
     date: new Date(values.date).toISOString(),
   }
-  console.log(submitData)
+
+  storeEntry(submitData)
 })
 
+const getAccounts = async () => {
+  await fetchAccounts();
+  form.setFieldValue('account', accounts.value.find(account => account.default)?.id)
+}
+const getCategories = async () => {
+  await fetchCategories();
+  form.setFieldValue('category', categoryFetch.value.categories.find(category => category.name === 'Uncategorized')?.id)
+}
+
+// The fetch should be called on mount
 onMounted(async () => {
-  await getAccounts();
-  // Set the default account after loading
-  const defaultAccount = accounts.value.find(account => account.default)
-  if (defaultAccount) {
-    form.setFieldValue('account', defaultAccount.id)
-  }
+  await Promise.all([
+    getAccounts(),
+    getCategories(),
+  ])
 })
 </script>
 
@@ -68,6 +85,71 @@ onMounted(async () => {
               <SelectGroup>
                 <SelectItem value="expense">Expense</SelectItem>
                 <SelectItem value="income">Income</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </FormControl>
+      </FormItem>
+    </FormField>
+
+    <FormField v-slot="{ componentField }" name="date">
+      <FormItem class="mt-4">
+        <FormLabel>Date</FormLabel>
+        <FormControl>
+          <Input v-bind="componentField" type="date" class="w-full"/>
+        </FormControl>
+      </FormItem>
+    </FormField>
+
+    <FormField v-slot="{ componentField }" name="account">
+      <FormItem class="mt-4">
+        <FormLabel>Account</FormLabel>
+        <FormControl>
+          <Select v-bind="componentField" class="w-full">
+            <SelectTrigger class="w-full">
+              <SelectValue placeholder="Select account">
+                <span v-if="accountsLoading" class="flex items-center gap-2">
+                  <Loader2 class="h-4 w-4 animate-spin"/>
+                  Loading accounts...
+                </span>
+                <span v-else-if="accountsError" class="text-destructive">
+                  Error loading accounts: {{ accountsError }}
+                </span>
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem v-for="item in accounts" :key="item.id" :value="item.id">
+                  {{ item.name }} ({{ item.currency }} {{ item.balance }})
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </FormControl>
+      </FormItem>
+    </FormField>
+
+    <FormField v-slot="{ componentField }" name="category">
+      <FormItem class="mt-4">
+        <FormLabel>Category</FormLabel>
+        <FormControl>
+          <Select v-bind="componentField" class="w-full">
+            <SelectTrigger class="w-full">
+              <SelectValue placeholder="Select category">
+                <span v-if="categoryFetch.isLoading" class="flex items-center gap-2">
+                  <Loader2 class="h-4 w-4 animate-spin"/>
+                  Loading accounts...
+                </span>
+                <span v-else-if="categoryFetch.error" class="text-destructive">
+                  Error loading categories: {{ categoryFetch.error }}
+                </span>
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem v-for="item in categoryFetch.categories" :key="item.id" :value="item.id">
+                  {{ item.name }}
+                </SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -93,40 +175,9 @@ onMounted(async () => {
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="date">
-      <FormItem class="mt-4">
-        <FormLabel>Date</FormLabel>
-        <FormControl>
-          <Input v-bind="componentField" type="date" class="w-full"/>
-        </FormControl>
-      </FormItem>
-    </FormField>
-
-    <FormField v-slot="{ componentField }" name="account">
-      <FormItem class="mt-4">
-        <FormLabel>Account</FormLabel>
-        <FormControl>
-          <Select v-bind="componentField" class="w-full">
-            <SelectTrigger class="w-full">
-              <SelectValue placeholder="Select account">
-                <span v-if="accountsLoading" class="flex items-center gap-2">
-                  <Loader2 class="h-4 w-4 animate-spin"/>
-                  Loading accounts...
-                </span>
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem v-for="item in accounts" :key="item.id" :value="item.id">
-                  {{ item.name }} ({{item.currency}} {{item.balance}})
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </FormControl>
-      </FormItem>
-    </FormField>
-
-    <Button variant="default" type="submit" class="mt-4">Submit</Button>
+    <Button variant="default" type="submit" class="mt-4" :disabled="categoryFetch.isLoading || accountsLoading">
+      <Loader2 class="h-4 w-4 animate-spin" v-if="categoryFetch.isLoading || accountsLoading || entryStore.isLoading"/>
+      <span v-else>Submit</span>
+    </Button>
   </form>
 </template>

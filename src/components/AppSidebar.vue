@@ -6,9 +6,12 @@ import {
   SidebarFooter,
   SidebarGroup, SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader, SidebarMenuButton, SidebarMenuItem
+  SidebarHeader, SidebarMenuButton, SidebarMenuItem, useSidebar
 } from "@/components/ui/sidebar";
 import {Calendar, Home, Inbox, Search, Settings, PlusCircleIcon} from "lucide-vue-next";
+
+
+const {toggleSidebar} = useSidebar()
 
 const items = [
   {
@@ -50,7 +53,7 @@ const items = [
             <SidebarMenuButton asChild>
               <RouterLink to="/entry/add">
                 <PlusCircleIcon/>
-                <span>Add Entry</span>
+                <span @click="toggleSidebar">Add Entry</span>
               </RouterLink>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -63,7 +66,7 @@ const items = [
             <SidebarMenuButton asChild>
               <RouterLink :to="item.url">
                 <component :is="item.icon" />
-                <span>{{item.title}}</span>
+                <span @click="toggleSidebar">{{item.title}}</span>
               </RouterLink>
             </SidebarMenuButton>
           </SidebarMenuItem>
