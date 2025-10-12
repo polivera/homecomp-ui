@@ -1,32 +1,34 @@
 import {computed, ref} from "vue";
 
-interface Entry {
+export interface IEntry {
     id: number | null;
     account: number;
     category: number;
+    household: number | null;
     date: string;
     description: string;
     amount: number;
     entryType: string;
 }
 
-export interface EntryStore {
+interface IEntryStore {
     isLoading: boolean;
     error: string | null;
 }
 
-const entryStore = ref<EntryStore>({
+const entryStore = ref<IEntryStore>({
     isLoading: false,
     error: null,
 })
 
-const storeEntry = async (entry: Entry) => {
+const storeEntry = async (entry: IEntry) => {
     entryStore.value.isLoading = true
 
     try {
         await new Promise((resolve) => {
             setTimeout(resolve, 550)
         })
+        console.log('Saving entry...')
         console.log(entry)
     } catch (saveError) {
         entryStore.value.error = 'Failed to save entry'

@@ -8,10 +8,15 @@ import {
   SidebarGroupLabel,
   SidebarHeader, SidebarMenuButton, SidebarMenuItem, useSidebar
 } from "@/components/ui/sidebar";
-import {Calendar, Home, Inbox, Search, Settings, PlusCircleIcon} from "lucide-vue-next";
+import {Calendar, Home, Inbox, Search, Settings, PlusCircleIcon, Wallet, CalendarCog} from "lucide-vue-next";
 
+const {toggleSidebar, isMobile} = useSidebar()
 
-const {toggleSidebar} = useSidebar()
+const mobileToggleSidebar = () => {
+  if (isMobile.value) {
+    toggleSidebar()
+  }
+}
 
 const items = [
   {
@@ -20,14 +25,14 @@ const items = [
     icon: Home,
   },
   {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
+    title: "Entries",
+    url: "/entry/list",
+    icon: Wallet,
   },
   {
-    title: "Calendar",
+    title: "Reminders",
     url: "#",
-    icon: Calendar,
+    icon: CalendarCog,
   },
   {
     title: "Search",
@@ -53,7 +58,7 @@ const items = [
             <SidebarMenuButton asChild>
               <RouterLink to="/entry/add">
                 <PlusCircleIcon/>
-                <span @click="toggleSidebar">Add Entry</span>
+                <span @click="mobileToggleSidebar">Add Entry</span>
               </RouterLink>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -66,7 +71,7 @@ const items = [
             <SidebarMenuButton asChild>
               <RouterLink :to="item.url">
                 <component :is="item.icon" />
-                <span @click="toggleSidebar">{{item.title}}</span>
+                <span @click="mobileToggleSidebar">{{item.title}}</span>
               </RouterLink>
             </SidebarMenuButton>
           </SidebarMenuItem>

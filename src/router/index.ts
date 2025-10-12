@@ -3,7 +3,8 @@ import LoginFormView from "@/views/LoginFormView.vue";
 import Dashboard from "@/views/Dashboard.vue";
 import {useAuth} from "@/composable/useAuth.ts";
 import {ref} from "vue";
-import EntryFormView from "@/views/EntryFormView.vue";
+import EntryFormView from "@/views/entries/EntryFormView.vue";
+import EntryList from "@/views/entries/EntryList.vue";
 
 const auth = useAuth();
 
@@ -25,6 +26,11 @@ const router = createRouter({
             path: '/entry/add',
             name: 'add-entry',
             component: EntryFormView,
+        },
+        {
+            path: '/entry/list',
+            name: 'entry-list',
+            component: EntryList,
         }
         // {
         //     path: '/about',

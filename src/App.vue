@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {RouterView, useRoute} from 'vue-router'
 import AppLayout from "@/layout/AppLayout.vue";
+import {Toaster} from "@/components/ui/toast";
 
 const route = useRoute();
 
@@ -13,6 +14,8 @@ const route = useRoute();
   <AppLayout v-else>
     <RouterView />
   </AppLayout>
+
+  <Toaster/>
 </template>
 
 <style scoped>
