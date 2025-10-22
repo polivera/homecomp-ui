@@ -16,14 +16,25 @@ interface IEntryStore {
     error: string | null;
 }
 
+interface IEntryFetch {
+    isLoading: boolean;
+    entries: IEntry[];
+    error: string | null;
+}
+
 const entryStore = ref<IEntryStore>({
     isLoading: false,
     error: null,
 })
 
+const entryFetch = ref<IEntryFetch>({
+    entries: [],
+    error: null,
+    isLoading: false
+})
+
 const storeEntry = async (entry: IEntry) => {
     entryStore.value.isLoading = true
-
     try {
         await new Promise((resolve) => {
             setTimeout(resolve, 550)
@@ -37,9 +48,24 @@ const storeEntry = async (entry: IEntry) => {
     }
 }
 
+const fetchEntries = async() => {
+    entryFetch.value.isLoading = true
+
+    try {
+
+    } catch (fetchError) {
+        entryFetch.value.error = 'Failed to fetch entries'
+    } finally {
+        entryFetch.value.isLoading = false
+    }
+
+}
+
 export const useEntries = () => {
     return {
         entryStore: computed(() => entryStore.value),
+        entryFetch: computed(() => entryFetch.value),
+        fetchEntries,
         storeEntry,
     };
 }
