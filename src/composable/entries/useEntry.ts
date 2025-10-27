@@ -7,11 +7,12 @@ async function fetch(
     accountID: number,
     month: number,
     year: number,
+    lastID: string | null = null,
     entryFetch: Ref<IEntryFetch>
 ) {
     entryFetch.value.isLoading = true
     try {
-        const newEntries = await fetchEntries(accountID, month, year)
+        const newEntries = await fetchEntries(accountID, month, year, lastID)
         if (newEntries.length === 0) {
             entryFetch.value.hasMore = false;
             return
@@ -37,8 +38,8 @@ export const useEntries = () => {
     return {
         entryStore: computed(() => entryStore.value),
         entryFetch: computed(() => entryFetch.value),
-        fetchEntries: (accountID: number, month: number, year: number) => fetch(
-            accountID, month, year, entryFetch
+        fetchEntries: (accountID: number, month: number, year: number, lastID: string | null = null) => fetch(
+            accountID, month, year, lastID, entryFetch
         ),
         storeEntry,
     };

@@ -1,7 +1,7 @@
 import {generateEntries} from "@/composable/entries/mock.ts";
 
 export interface IEntry {
-    id: number;
+    id: string;
     account: number;
     accountName: string;
     category: number;
@@ -21,7 +21,10 @@ export interface IEntryFetch {
     error: string | null;
 }
 
-export const fetchEntries = async (accountID: number, month: number, year: number): Promise<IEntry[]> => {
+export const fetchEntries = async (
+    accountID: number, month: number, year: number, lastID: string | null = null
+): Promise<IEntry[]> => {
+    console.log(lastID)
     await new Promise((resolve) => {
         setTimeout(resolve, 1500)
     })
