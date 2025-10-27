@@ -7,11 +7,11 @@ import AppSidebar from "@/components/AppSidebar.vue";
 
 <template>
   <SidebarProvider>
-    <AppSidebar />
+    <AppSidebar/>
     <main class="w-full">
-      <SidebarTrigger />
-      <div class="m-4">
-        <RouterView />
+      <SidebarTrigger/>
+      <div class="mx-auto max-w-7xl px-4 py-4">
+        <RouterView/>
       </div>
     </main>
   </SidebarProvider>

@@ -2,9 +2,8 @@ import {createRouter, createWebHistory} from 'vue-router'
 import LoginFormView from "@/views/LoginFormView.vue";
 import Dashboard from "@/views/Dashboard.vue";
 import {useAuth} from "@/composable/useAuth.ts";
-import {ref} from "vue";
 import EntryFormView from "@/views/entries/EntryFormView.vue";
-import EntryList from "@/views/entries/EntryList.vue";
+import EntryList from "@/views/entries/EntryListView.vue";
 
 const auth = useAuth();
 

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 
+import EntryList from "@/components/EntryList.vue";
 </script>
 
 <template>
-  <div>This is the entry list</div>
+  <EntryList :accountID="1" :year="2025" :month="7" />
 </template>
 
 <style scoped>

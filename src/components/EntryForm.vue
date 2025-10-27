@@ -3,21 +3,13 @@ import {useForm} from 'vee-validate'
 import {toTypedSchema} from '@vee-validate/zod'
 import * as z from 'zod'
 import {FormControl, FormField, FormItem, FormLabel} from "@/components/ui/form"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue,} from '@/components/ui/select'
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {useAccounts} from "@/composable/useAccounts.ts";
 import {onMounted} from "vue";
 import {useCategories} from "@/composable/useCategories.ts";
-import {useEntries} from "@/composable/useEntry.ts";
-import type {IEntry} from "@/composable/useEntry.ts";
+import {type IEntryForm, useEntries} from "@/composable/entries";
 import {useToast} from "@/components/ui/toast";
 import {Spinner} from "@/components/ui/spinner";
 import {useHousehold} from "@/composable/useHousehold.ts";
@@ -60,15 +52,15 @@ const formSubmit = form.handleSubmit(async (values) => {
     date: new Date(values.date).toISOString(),
   }
 
-  const newEntry: IEntry = {
+  const newEntry: IEntryForm = {
+    id: null,
     account: submitData.account,
     amount: submitData.amount,
     category: submitData.category,
     date: submitData.date,
     description: submitData.description,
     entryType: submitData.entryType,
-    household: submitData?.household || null,
-    id: null
+    household: submitData?.household || null
   }
 
   await storeEntry(newEntry);
