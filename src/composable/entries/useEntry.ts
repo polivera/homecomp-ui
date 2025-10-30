@@ -1,6 +1,6 @@
-import {computed, type Ref, ref} from "vue";
-import {fetchEntries, type IEntryFetch} from "@/composable/entries/fetch.ts";
-import {entryStore, storeEntry} from "@/composable/entries/store.ts";
+import { computed, type Ref, ref } from "vue";
+import { fetchEntries, type IEntryFetch } from "@/composable/entries/fetch.ts";
+import { entryStore, storeEntry } from "@/composable/entries/store.ts";
 
 
 async function fetch(
@@ -20,12 +20,11 @@ async function fetch(
         entryFetch.value.entries = [...entryFetch.value.entries, ...newEntries]
         return
     } catch (error) {
-       entryFetch.value.error = 'Failed to fetch entries'
+        entryFetch.value.error = 'Failed to fetch entries'
     } finally {
         entryFetch.value.isLoading = false
     }
 }
-
 
 export const useEntries = () => {
     const entryFetch = ref<IEntryFetch>({

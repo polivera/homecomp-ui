@@ -1,4 +1,4 @@
-const getCurrencySign = (isoName: string) => {
+const getCurrencySign = (isoName: string): string => {
     switch (isoName) {
         case 'USD':
             return '$'
@@ -9,8 +9,13 @@ const getCurrencySign = (isoName: string) => {
     }
 }
 
+const formatMoney = (amount: number, isoCurrency: string): string => {
+    return getCurrencySign(isoCurrency) + " " + amount.toString()
+}
+
 export const useCurrency = () => {
     return {
-        getCurrencySign
+        getCurrencySign,
+        formatMoney,
     }
 }

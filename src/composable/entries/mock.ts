@@ -1,6 +1,6 @@
 // MOCK FUNCTION TO GENERATE ENTRIES
-import type {IEntry} from "@/composable/entries/fetch.ts";
-import {faker} from "@faker-js/faker/locale/en";
+import type { IEntry } from "@/composable/entries/fetch.ts";
+import { faker } from "@faker-js/faker/locale/en";
 
 export function generateEntries(resultCount: number, month: number, year: number): IEntry[] {
     const entries: IEntry[] = []
@@ -9,19 +9,18 @@ export function generateEntries(resultCount: number, month: number, year: number
     month--;
     for (let i = 0; i < resultCount; i++) {
         entries.push({
-            id: i + 1,
+            id: `${i + 1}`,
             account: 1,
             accountName: "Personal",
             category: 3,
-            categoryName: categories[faker.number.int({min: 0, max: categories.length - 1})],
+            categoryName: categories[faker.number.int({ min: 0, max: categories.length - 1 })],
             household: null,
-            date: faker.date.between({from: new Date(year, month, 1), to: new Date(year, month + 1, 0)}).toString(),
+            date: faker.date.between({ from: new Date(year, month + 1, 1), to: new Date(year, month + 2, 0) }).toString(),
             description: faker.commerce.productName(),
-            amount: faker.number.float({min: 1, max: 200, fractionDigits: 2}),
+            amount: faker.number.float({ min: 1, max: 200, fractionDigits: 2 }),
             currency: 'EUR',
-            entryType: entryTypes[faker.number.int({min: 0, max: 1})]
+            entryType: entryTypes[faker.number.int({ min: 0, max: 1 })]
         })
-        // Add your entry generation logic here
     }
     entries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     return entries
