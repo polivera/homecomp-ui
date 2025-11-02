@@ -24,7 +24,6 @@ const month = ref<number>(currDate.getMonth());
     <div>
         <MonthAndYearSelect v-model:month="month" v-model:year="year" />
     </div>
-    <div>{{ month }} {{ year }}</div>
     <div class="py-4">
         <Tabs
             :default-value="accountList[0]?.id.toString()"

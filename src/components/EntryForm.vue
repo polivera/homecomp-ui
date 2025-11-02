@@ -8,7 +8,7 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {useAccounts} from "@/composable/useAccounts.ts";
 import {onMounted} from "vue";
-import {useCategories} from "@/composable/useCategories.ts";
+import {useCategories} from "@/composable/categories";
 import {type IEntryForm, useEntries} from "@/composable/entries";
 import {useToast} from "@/components/ui/toast";
 import {Spinner} from "@/components/ui/spinner";
@@ -246,7 +246,6 @@ onMounted(async () => {
     </FormField>
 
     <Button variant="default" type="submit" class="mt-4" :disabled="categoryFetch.isLoading || accountsLoading">
-      <!--      <Loader2 class="h-4 w-4 animate-spin" v-if="categoryFetch.isLoading || accountsLoading || entryStore.isLoading"/>-->
       <Spinner v-if="categoryFetch.isLoading || accountsLoading || entryStore.isLoading"/>
       <span v-else>Submit</span>
     </Button>
