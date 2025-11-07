@@ -4,6 +4,7 @@ import Dashboard from "@/views/Dashboard.vue";
 import {useAuth} from "@/composable/useAuth.ts";
 import EntryFormView from "@/views/entries/EntryFormView.vue";
 import EntryList from "@/views/entries/EntryListView.vue";
+import ReminderFormView from "@/views/reminders/ReminderFormView.vue";
 
 const auth = useAuth();
 
@@ -30,6 +31,11 @@ const router = createRouter({
             path: '/entry/list',
             name: 'entry-list',
             component: EntryList,
+        },
+        {
+            path: '/reminder/add',
+            name: 'add-reminder',
+            component: ReminderFormView,
         }
         // {
         //     path: '/about',

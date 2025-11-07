@@ -12,7 +12,6 @@ const fetch = async (categoryFetch: Ref<ICategoryFetch>) => {
     }
 }
 
-
 export const useCategories = () => {
     const categoryFetch = ref<ICategoryFetch>({
         isLoading: false,

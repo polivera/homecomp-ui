@@ -1,253 +1,250 @@
 <script setup lang="ts">
-import {useForm} from 'vee-validate'
-import {toTypedSchema} from '@vee-validate/zod'
-import * as z from 'zod'
-import {FormControl, FormField, FormItem, FormLabel} from "@/components/ui/form"
-import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue,} from '@/components/ui/select'
-import {Button} from "@/components/ui/button";
-import {Input} from "@/components/ui/input";
-import {useAccounts} from "@/composable/useAccounts.ts";
-import {onMounted} from "vue";
-import {useCategories} from "@/composable/categories";
-import {type IEntryForm, useEntries} from "@/composable/entries";
-import {useToast} from "@/components/ui/toast";
-import {Spinner} from "@/components/ui/spinner";
-import {useHousehold} from "@/composable/useHousehold.ts";
+import { useForm } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
+import * as z from "zod";
+import {
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useAccounts, type Account } from "@/composable/useAccounts.ts";
+import { computed, onMounted } from "vue";
+import { useCategories } from "@/composable/categories";
+import { type IEntryForm, useEntries } from "@/composable/entries";
+import { useToast } from "@/components/ui/toast";
+import { Spinner } from "@/components/ui/spinner";
+import { useHousehold } from "@/composable/useHousehold.ts";
+import FormSelect from "./custom_ui/FormSelect/FormSelect.vue";
+import type { SelectOption } from "@/components/custom_ui/FormSelect";
 
-const {accounts, fetchAccounts, isLoading: accountsLoading, error: accountsError} = useAccounts();
-const {categoryFetch, fetchCategories} = useCategories();
-const {entryStore, storeEntry} = useEntries()
-const {fetchHouseholds, householdFetch} = useHousehold();
-const {toast} = useToast();
+const {
+    accounts,
+    fetchAccounts,
+    isLoading: accountsLoading,
+    error: accountsError,
+} = useAccounts();
+const { categoryFetch, fetchCategories } = useCategories();
+const { entryStore, storeEntry } = useEntries();
+const { fetchHouseholds, householdFetch } = useHousehold();
+const { toast } = useToast();
 
 // Form definition
-const formSchema = toTypedSchema(z.object({
-  id: z.number().optional(),
-  entryType: z.string(),
-  amount: z.number().positive().multipleOf(0.01),
-  description: z.string().min(1),
-  date: z.string(),
-  account: z.number().refine((value) => accounts.value.some(account => account.id === value), {}),
-  household: z.number().optional(),
-  category: z.number().refine(
-      (value) => categoryFetch.value.categories.some(category => category.id === value),
-      {}
-  ),
-}))
+const formSchema = toTypedSchema(
+    z.object({
+        id: z.number().optional(),
+        entryType: z.string(),
+        amount: z.number().positive().multipleOf(0.01),
+        description: z.string().min(1),
+        date: z.string(),
+        account: z
+            .number()
+            .refine(
+                (value) =>
+                    accounts.value.some((account) => account.id === value),
+                {},
+            ),
+        household: z.number().optional(),
+        category: z
+            .number()
+            .refine(
+                (value) =>
+                    categoryFetch.value.categories.some(
+                        (category) => category.id === value,
+                    ),
+                {},
+            ),
+    }),
+);
 
 // Form setup
 const form = useForm({
-  validationSchema: formSchema,
-  initialValues: {
-    entryType: 'expense', // Pre-select here
-    date: new Date().toISOString().split('T')[0],
-    account: accounts.value.find(account => account.default)?.id,
-  },
-})
+    validationSchema: formSchema,
+    initialValues: {
+        entryType: "expense", // Pre-select here
+        date: new Date().toISOString().split("T")[0],
+        account: accounts.value.find((account) => account.default)?.id,
+    },
+});
 
 // Form submission
 const formSubmit = form.handleSubmit(async (values) => {
-  const submitData = {
-    ...values,
-    date: new Date(values.date).toISOString(),
-  }
+    const submitData = {
+        ...values,
+        date: new Date(values.date).toISOString(),
+    };
 
-  const newEntry: IEntryForm = {
-    id: null,
-    account: submitData.account,
-    amount: submitData.amount,
-    category: submitData.category,
-    date: submitData.date,
-    description: submitData.description,
-    entryType: submitData.entryType,
-    household: submitData?.household || null
-  }
+    const newEntry: IEntryForm = {
+        id: null,
+        account: submitData.account,
+        amount: submitData.amount,
+        category: submitData.category,
+        date: submitData.date,
+        description: submitData.description,
+        entryType: submitData.entryType,
+        household: submitData?.household || null,
+    };
 
-  await storeEntry(newEntry);
+    await storeEntry(newEntry);
 
-  form.resetForm({
-    values: {
-      entryType: 'expense',
-      date: new Date().toISOString().split('T')[0],
-      account: accounts.value.find(account => account.default)?.id,
-      category: categoryFetch.value.categories.find(category => category.name === 'Uncategorized')?.id,
-      description: '',
-      amount: undefined,
-    }
-  });
+    form.resetForm({
+        values: {
+            entryType: "expense",
+            date: new Date().toISOString().split("T")[0],
+            account: accounts.value.find((account) => account.default)?.id,
+            category: categoryFetch.value.categories.find(
+                (category) => category.name === "Uncategorized",
+            )?.id,
+            description: "",
+            amount: undefined,
+        },
+    });
 
-  toast({
-    description: 'Your entry has been added successfully.',
-  })
+    toast({
+        description: "Your entry has been added successfully.",
+    });
 });
 
 // Retrieve accounts
 const getAccounts = async () => {
-  await fetchAccounts();
-  form.setFieldValue('account', accounts.value.find(account => account.default)?.id);
-}
+    await fetchAccounts();
+    form.setFieldValue(
+        "account",
+        accounts.value.find((account) => account.default)?.id,
+    );
+};
 
 // Retrieve categories
 const getCategories = async () => {
-  await fetchCategories();
-  form.setFieldValue('category', categoryFetch.value.categories.find(category => category.name === 'Uncategorized')?.id);
-}
+    await fetchCategories();
+    form.setFieldValue(
+        "category",
+        categoryFetch.value.categories.find(
+            (category) => category.name === "Uncategorized",
+        )?.id,
+    );
+};
 
 // The fetch should be called on mount
 onMounted(async () => {
-  await Promise.all([
-    getAccounts(),
-    getCategories(),
-    fetchHouseholds(),
-  ])
-})
+    await Promise.all([getAccounts(), getCategories(), fetchHouseholds()]);
+});
 
+const entryTypes = [
+    { value: "income", label: "Income", disabled: false },
+    { value: "expense", label: "Expense", disabled: false },
+];
+
+const buildAccountName = (account: Account): string => {
+    return `${account.name} (${account.currency} ${account.balance})`;
+};
+
+const categoryOptions = computed<SelectOption[]>(() =>
+    categoryFetch.value.categories.map((cat) => ({
+        value: cat.id,
+        label: cat.name,
+    })),
+);
+
+const accountOptions = computed<SelectOption[]>(() =>
+    accounts.value.map((it) => ({ value: it.id, label: buildAccountName(it) })),
+);
 </script>
 
 <template>
-  <form @submit="formSubmit">
-    <input type="hidden" name="entryType" v-model="form.values.id"></input>
-    <FormField v-slot="{ componentField }" name="entryType">
-      <FormItem>
-        <FormLabel>Entry Type</FormLabel>
-        <FormControl>
-          <Select v-bind="componentField" class="w-full">
-            <SelectTrigger class="w-full">
-              <SelectValue placeholder="Select type of expense"/>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="expense">Expense</SelectItem>
-                <SelectItem value="income">Income</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </FormControl>
-      </FormItem>
-    </FormField>
+    <form @submit="formSubmit">
+        <input type="hidden" name="entryType" v-model="form.values.id" />
+        <FormSelect
+            name="entryType"
+            label="Entry Type"
+            placeholder="Select type of expense"
+            :items="entryTypes"
+            class="w-full"
+        />
 
-    <FormField v-slot="{ componentField }" name="date">
-      <FormItem class="mt-4">
-        <FormLabel>Date</FormLabel>
-        <FormControl>
-          <Input v-bind="componentField" type="date" class="w-full"/>
-        </FormControl>
-      </FormItem>
-    </FormField>
+        <FormField v-slot="{ componentField }" name="date">
+            <FormItem class="mt-4">
+                <FormLabel>Date</FormLabel>
+                <FormControl>
+                    <Input v-bind="componentField" type="date" class="w-full" />
+                </FormControl>
+            </FormItem>
+        </FormField>
 
-    <FormField v-slot="{ componentField }" name="account">
-      <FormItem class="mt-4">
-        <FormLabel>Account</FormLabel>
-        <FormControl>
-          <Select v-bind="componentField" class="w-full">
-            <SelectTrigger class="w-full">
-              <SelectValue placeholder="Select account">
-                <span v-if="accountsLoading" class="flex items-center gap-2">
-<!--                  <Loader2 class="h-4 w-4 animate-spin"/>-->
-                  <Spinner/>
-                  Loading accounts...
-                </span>
-                <span v-else-if="accountsError" class="text-destructive">
-                  Error loading accounts: {{ accountsError }}
-                </span>
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem v-for="item in accounts" :key="item.id" :value="item.id">
-                  {{ item.name }} ({{ item.currency }} {{ item.balance }})
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </FormControl>
-      </FormItem>
-    </FormField>
+        <FormSelect
+            name="account"
+            label="Account"
+            placeholder=""
+            :items="accountOptions"
+            :isLoading="accountsLoading"
+            :error="accountsError"
+            class="mt-4"
+        />
 
-    <FormField v-slot="{ componentField }" name="category">
-      <FormItem class="mt-4">
-        <FormLabel>Category</FormLabel>
-        <FormControl>
-          <Select v-bind="componentField" class="w-full">
-            <SelectTrigger class="w-full">
-              <SelectValue placeholder="Select category">
-                <span v-if="categoryFetch.isLoading" class="flex items-center gap-2">
-                  <Spinner/>
-                  Loading accounts...
-                </span>
-                <span v-else-if="categoryFetch.error" class="text-destructive">
-                  Error loading categories: {{ categoryFetch.error }}
-                </span>
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem v-for="item in categoryFetch.categories" :key="item.id" :value="item.id">
-                  {{ item.name }}
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </FormControl>
-      </FormItem>
-    </FormField>
+        <FormSelect
+            name="category"
+            label="Category"
+            placeholder=""
+            :items="categoryOptions"
+            :isLoading="categoryFetch.isLoading"
+            :error="categoryFetch.error"
+            class="mt-4"
+        />
 
-    <FormField v-slot="{ componentField }" name="household">
-      <FormItem class="mt-4">
-        <FormLabel>Household</FormLabel>
-        <FormControl>
-          <Select v-bind="componentField" class="w-full">
-            <SelectTrigger class="w-full">
-              <SelectValue placeholder="Select category">
-                <span v-if="householdFetch.isLoading" class="flex items-center gap-2">
-                  <Spinner/>
-                  Loading households...
-                </span>
-                <span v-if="householdFetch.error" class="text-destructive">
-                  Error loading categories: {{ householdFetch.error }}
-                </span>
-                <span
-                    v-if="!householdFetch.error && !householdFetch.isLoading && householdFetch.households.length === 0">
-                  No households found.
-                </span>
-                <span v-if="!householdFetch.error && householdFetch.households.length > 0">
-                  Select a household (optional)
-                </span>
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem v-for="item in householdFetch.households" :key="item.id" :value="item.id">
-                  {{ item.name }}
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </FormControl>
-      </FormItem>
-    </FormField>
+        <FormSelect
+            name="household"
+            label="Household"
+            placeholder="Select a household (optional)"
+            :items="
+                householdFetch.households.map((it) => ({
+                    value: it.id,
+                    label: it.name,
+                }))
+            "
+            :isLoading="householdFetch.isLoading"
+            :error="householdFetch.error"
+            class="mt-4"
+        />
 
-    <FormField v-slot="{ componentField }" name="amount">
-      <FormItem class="mt-4">
-        <FormLabel>Amount</FormLabel>
-        <FormControl>
-          <Input v-bind="componentField" step="0.01" type="number" class="w-full"/>
-        </FormControl>
-      </FormItem>
-    </FormField>
+        <FormField v-slot="{ componentField }" name="amount">
+            <FormItem class="mt-4">
+                <FormLabel>Amount</FormLabel>
+                <FormControl>
+                    <Input
+                        v-bind="componentField"
+                        step="0.01"
+                        type="number"
+                        class="w-full"
+                    />
+                </FormControl>
+            </FormItem>
+        </FormField>
 
-    <FormField v-slot="{ componentField }" name="description">
-      <FormItem class="mt-4">
-        <FormLabel>Description</FormLabel>
-        <FormControl>
-          <Input v-bind="componentField" type="text" class="w-full"/>
-        </FormControl>
-      </FormItem>
-    </FormField>
+        <FormField v-slot="{ componentField }" name="description">
+            <FormItem class="mt-4">
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                    <Input v-bind="componentField" type="text" class="w-full" />
+                </FormControl>
+            </FormItem>
+        </FormField>
 
-    <Button variant="default" type="submit" class="mt-4" :disabled="categoryFetch.isLoading || accountsLoading">
-      <Spinner v-if="categoryFetch.isLoading || accountsLoading || entryStore.isLoading"/>
-      <span v-else>Submit</span>
-    </Button>
-  </form>
+        <Button
+            variant="default"
+            type="submit"
+            class="mt-4"
+            :disabled="categoryFetch.isLoading || accountsLoading"
+        >
+            <Spinner
+                v-if="
+                    categoryFetch.isLoading ||
+                    accountsLoading ||
+                    entryStore.isLoading
+                "
+            />
+            <span v-else>Submit</span>
+        </Button>
+    </form>
 </template>

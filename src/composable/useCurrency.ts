@@ -6,6 +6,8 @@ const getCurrencySign = (isoName: string): string => {
             return '€'
         case 'ARS':
             return 'A$'
+        default:
+            return '??'
     }
 }
 
