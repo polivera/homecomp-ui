@@ -1,10 +1,11 @@
-import {createRouter, createWebHistory} from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import LoginFormView from "@/views/LoginFormView.vue";
 import Dashboard from "@/views/Dashboard.vue";
-import {useAuth} from "@/composable/useAuth.ts";
+import { useAuth } from "@/composable/useAuth.ts";
 import EntryFormView from "@/views/entries/EntryFormView.vue";
 import EntryList from "@/views/entries/EntryListView.vue";
 import ReminderFormView from "@/views/reminders/ReminderFormView.vue";
+import RemindersListView from '@/views/reminders/RemindersListView.vue';
 
 const auth = useAuth();
 
@@ -15,7 +16,7 @@ const router = createRouter({
             path: '/login',
             name: 'login',
             component: LoginFormView,
-            meta: {layout: 'simple'}
+            meta: { layout: 'simple' }
         },
         {
             path: '/',
@@ -31,6 +32,11 @@ const router = createRouter({
             path: '/entry/list',
             name: 'entry-list',
             component: EntryList,
+        },
+        {
+            path: '/reminder/list',
+            name: 'reminder-list',
+            component: RemindersListView,
         },
         {
             path: '/reminder/add',

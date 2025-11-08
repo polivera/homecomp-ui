@@ -2,6 +2,7 @@ import { generateReminders } from "./mock";
 
 export interface IReminder {
     id: string;
+    description: string;
     amount: number;
     currency: string;
     lapse: number;

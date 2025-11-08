@@ -3,13 +3,13 @@ import { ref } from "vue";
 export interface IReminderForm {
     id: string | null;
     amount: number;
+    description: string;
     currency: string;
     lapse: number;
     dateStart: string;
-    dateEnd: string;
+    dateEnd: string | null;
     category: number;
-    owner: number;
-    household: number;
+    household: number | null;
 }
 
 interface IReminderStore {
