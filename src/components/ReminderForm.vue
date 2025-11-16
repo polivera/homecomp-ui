@@ -20,18 +20,18 @@ import {
     FormSelect,
     type SelectOption,
 } from "@/components/custom_ui/FormSelect";
+import { useDate } from "@/composable/useDate";
+import { useCurrency } from "@/composable/useCurrency";
 
 const { categoryFetch, fetchCategories } = useCategories();
 const { reminderStore, storeReminder } = useReminders();
 const { fetchHouseholds, householdFetch } = useHousehold();
+const { getCurrencyOptions, getDefaultCurrency } = useCurrency();
+const { getFirstDayOfNextMonthString } = useDate();
 const { toast } = useToast();
 
 // Currency options
-const currencyOptions: SelectOption[] = [
-    { value: "USD", label: "USD - US Dollar" },
-    { value: "EUR", label: "EUR - Euro" },
-    { value: "GBP", label: "GBP - British Pound" },
-];
+const currencyOptions = getCurrencyOptions();
 
 // Lapse options (days between reminders)
 const lapseOptions: SelectOption[] = [
@@ -112,10 +112,10 @@ const formSchema = toTypedSchema(
 const form = useForm({
     validationSchema: formSchema,
     initialValues: {
-        currency: "USD",
+        currency: getDefaultCurrency(),
         lapse: 30,
         household: null,
-        dateStart: new Date().toISOString().split("T")[0],
+        dateStart: getFirstDayOfNextMonthString(),
     },
 });
 
@@ -146,9 +146,9 @@ const formSubmit = form.handleSubmit(async (values) => {
 
     form.resetForm({
         values: {
-            currency: "EUR",
+            currency: getDefaultCurrency(),
             lapse: 30,
-            dateStart: new Date().toISOString().split("T")[0],
+            dateStart: getFirstDayOfNextMonthString(),
             dateEnd: null,
             category: categoryFetch.value.categories.find(
                 (category) => category.name === "Uncategorized",

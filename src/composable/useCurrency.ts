@@ -1,3 +1,5 @@
+import type { SelectOption } from "@/components/custom_ui/FormSelect"
+
 const getCurrencySign = (isoName: string): string => {
     switch (isoName) {
         case 'USD':
@@ -11,6 +13,26 @@ const getCurrencySign = (isoName: string): string => {
     }
 }
 
+const getCurrencies = () => {
+    return [
+        'USD',
+        'EUR',
+        'ARS',
+    ]
+}
+
+const getDefaultCurrency = () => {
+    return 'EUR'
+}
+
+const getCurrencyOptions = (): SelectOption[] => {
+    return [
+        { value: "USD", label: "USD - US Dollar" },
+        { value: "EUR", label: "EUR - Euro" },
+        { value: "GBP", label: "GBP - British Pound" },
+    ];
+}
+
 const formatMoney = (amount: number, isoCurrency: string): string => {
     return getCurrencySign(isoCurrency) + " " + amount.toString()
 }
@@ -18,6 +40,9 @@ const formatMoney = (amount: number, isoCurrency: string): string => {
 export const useCurrency = () => {
     return {
         getCurrencySign,
+        getCurrencies,
+        getCurrencyOptions,
+        getDefaultCurrency,
         formatMoney,
     }
 }
