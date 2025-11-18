@@ -22,6 +22,8 @@ import {
 } from "@/components/custom_ui/FormSelect";
 import { useDate } from "@/composable/useDate";
 import { useCurrency } from "@/composable/useCurrency";
+import { useLapse } from "@/composable/useLapse";
+import FormMessage from "./ui/form/FormMessage.vue";
 
 const { categoryFetch, fetchCategories } = useCategories();
 const { reminderStore, storeReminder } = useReminders();
@@ -29,19 +31,16 @@ const { fetchHouseholds, householdFetch } = useHousehold();
 const { getCurrencyOptions, getDefaultCurrency } = useCurrency();
 const { getFirstDayOfNextMonthString } = useDate();
 const { toast } = useToast();
+const { getLapses } = useLapse();
 
 // Currency options
 const currencyOptions = getCurrencyOptions();
 
 // Lapse options (days between reminders)
-const lapseOptions: SelectOption[] = [
-    { value: 7, label: "Weekly (7 days)" },
-    { value: 14, label: "Bi-weekly (14 days)" },
-    { value: 30, label: "Monthly (30 days)" },
-    { value: 60, label: "Bi-monthly (60 days)" },
-    { value: 90, label: "Quarterly (90 days)" },
-    { value: 365, label: "Yearly (365 days)" },
-];
+const lapseOptions: SelectOption[] = getLapses().map((it) => ({
+    value: it.days,
+    label: it.description,
+}));
 
 // Category options
 const categoryOptions = computed<SelectOption[]>(() =>
