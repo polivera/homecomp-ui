@@ -23,9 +23,10 @@ export interface IReminderFetch {
     error: string | null;
 }
 
-export const fetchReminders = async (): Promise<IReminder[]> => {
+export const fetchReminders = async (month: number, year: number): Promise<IReminder[]> => {
     await new Promise((resolve) => {
         setTimeout(resolve, 800);
     });
+    // TODO: Use month and year to filter reminders when backend is ready
     return generateReminders(10);
 }

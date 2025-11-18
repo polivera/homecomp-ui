@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, type Ref } from "vue";
 
 export interface IReminderForm {
     id: string | null;
@@ -12,17 +12,13 @@ export interface IReminderForm {
     household: number | null;
 }
 
-interface IReminderStore {
+export interface IReminderStore {
     isLoading: boolean;
     error: string | null;
 }
 
-export const reminderStore = ref<IReminderStore>({
-    isLoading: false,
-    error: null,
-})
 
-export const storeReminder = async (reminder: IReminderForm) => {
+export const storeReminder = async (reminderStore: Ref<IReminderStore>, reminder: IReminderForm) => {
     reminderStore.value.isLoading = true;
     try {
         await new Promise((resolve) => {

@@ -23,10 +23,9 @@ import {
 import { useDate } from "@/composable/useDate";
 import { useCurrency } from "@/composable/useCurrency";
 import { useLapse } from "@/composable/useLapse";
-import FormMessage from "./ui/form/FormMessage.vue";
 
 const { categoryFetch, fetchCategories } = useCategories();
-const { reminderStore, storeReminder } = useReminders();
+const { storedData: reminderStore, store: storeReminder } = useReminders();
 const { fetchHouseholds, householdFetch } = useHousehold();
 const { getCurrencyOptions, getDefaultCurrency } = useCurrency();
 const { getFirstDayOfNextMonthString } = useDate();

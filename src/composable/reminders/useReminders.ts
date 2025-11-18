@@ -1,11 +1,11 @@
 import { computed, ref, type Ref } from "vue";
 import { fetchReminders, type IReminderFetch } from "./fetch";
-import { reminderStore, storeReminder } from "./store";
+import { storeReminder, type IReminderForm, type IReminderStore } from "./store";
 
-const fetch = async (reminderFetch: Ref<IReminderFetch>) => {
+const fetch = async (reminderFetch: Ref<IReminderFetch>, month: number, year: number) => {
     reminderFetch.value.isLoading = true;
     try {
-        const newReminders = await fetchReminders();
+        const newReminders = await fetchReminders(month, year);
         reminderFetch.value.reminders = newReminders;
         reminderFetch.value.hasMore = false; // Set to false after initial fetch
     } catch (fetchError) {
@@ -23,10 +23,15 @@ export const useReminders = () => {
         error: null
     });
 
+    const reminderStore = ref<IReminderStore>({
+        isLoading: false,
+        error: null,
+    })
+
     return {
-        reminderFetch: computed(() => reminderFetch.value),
-        reminderStore: computed(() => reminderStore.value),
-        fetchReminders: () => fetch(reminderFetch),
-        storeReminder,
+        fetchedData: computed(() => reminderFetch.value),
+        storedData: computed(() => reminderStore.value),
+        fetch: (month: number, year: number) => fetch(reminderFetch, month, year),
+        store: (data: IReminderForm) => storeReminder(reminderStore, data),
     };
 }

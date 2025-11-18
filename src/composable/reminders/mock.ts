@@ -16,7 +16,7 @@ export function generateReminders(resultCount: number): IReminder[] {
             id: `${i + 1}`,
             amount: faker.number.float({ min: 10, max: 2000, fractionDigits: 2 }),
             description: faker.commerce.productName(),
-            currency: faker.helpers.arrayElement(['USD', 'EUR', 'GBP']),
+            currency: faker.helpers.arrayElement(['USD', 'EUR', 'ARS']),
             lapse: lapse,
             dateStart: dateStart.toISOString(),
             dateEnd: dateEnd.toISOString(),
