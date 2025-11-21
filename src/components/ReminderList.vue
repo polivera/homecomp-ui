@@ -11,6 +11,8 @@ import {
 import { useCurrency } from "@/composable/useCurrency.ts";
 import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useDate } from "@/composable/useDate";
 
 const props = defineProps<{
     year: number;
@@ -19,28 +21,30 @@ const props = defineProps<{
 
 const { fetch: reminderFetchAction, fetchedData: reminderFetchData } =
     useReminders();
+
 const { formatMoney } = useCurrency();
+const { formatDateMonthYearOnly } = useDate();
 const showDateStr = ref<string>(
-    new Date(props.year, props.month, 1).toLocaleDateString("en-US", {
-        month: "long",
-        year: "numeric",
-    }),
+    formatDateMonthYearOnly(props.year, props.month),
 );
 
+// TODO: Change this for the useDate one
 const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
         month: "short",
-        // day: "numeric",
         year: "numeric",
     });
 };
 
-const formatLapse = (lapse: number): string => {
-    const units = ["day", "week", "month", "year"];
-    const lapseUnit =
-        lapse > 0 && lapse <= units.length ? units[lapse - 1] : "unknown";
-    return `Every ${lapseUnit}`;
+const fetchMore = async () => {
+    await reminderFetchAction(
+        props.month,
+        props.year,
+        reminderFetchData.value.reminders[
+            reminderFetchData.value.reminders.length - 1
+        ].id,
+    );
 };
 
 onMounted(async () => {
@@ -89,7 +93,7 @@ const showReminders = computed(
                         <div class="flex justify-between items-start">
                             <span class="text-sm text-gray-400">
                                 From: {{ formatDate(reminder.dateStart) }}
-                                <span>
+                                <span v-if="reminder.dateEnd">
                                     - To: {{ formatDate(reminder.dateEnd) }}
                                 </span>
                                 <Badge variant="outline" class="ml-1">{{
@@ -125,6 +129,13 @@ const showReminders = computed(
         <Spinner />
         <span class="text-gray-600">Loading reminders...</span>
     </div>
+
+    <Button
+        v-if="reminderFetchData.hasMore && showReminders"
+        @click="reminderFetchAction"
+    >
+        Load More
+    </Button>
 </template>
 
 <style scoped></style>

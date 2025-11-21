@@ -41,6 +41,15 @@ export const useDate = () => {
         return formatDateToLocal(getLastDayOfCurrentMonth());
     }
 
+    const formatDateMonthYearOnly = (month?: number | null, year?: number | null): string => {
+        month = month || new Date().getMonth()
+        year = year || new Date().getFullYear()
+        return new Date(year, month, 1).toLocaleDateString("en-US", {
+            month: "long",
+            year: "numeric",
+        });
+    }
+
     return {
         getFirstDayOfNextMonth,
         getFirstDayOfNextMonthString,
@@ -49,5 +58,6 @@ export const useDate = () => {
         getFirstDayOfCurrentMonthString,
         getLastDayOfCurrentMonth,
         getLastDayOfCurrentMonthString,
+        formatDateMonthYearOnly,
     };
 };

@@ -12,14 +12,16 @@ const selectedYear = ref<number>(currentDate.getFullYear());
 </script>
 
 <template>
-    <div class="flex flex-col gap-4">
+    <div class="flex justify-between items-center border-b mb-5">
+        <h1 class="text-xl font-bold py-2 text-primary">Reminders List</h1>
         <Button asChild>
             <RouterLink to="/reminder/add">
                 <PlusCircleIcon />
                 <span>Add Reminder</span>
             </RouterLink>
         </Button>
-
+    </div>
+    <div class="flex flex-col gap-4 mt-5">
         <MonthAndYearSelect
             :month="selectedMonth"
             :year="selectedYear"

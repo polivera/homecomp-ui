@@ -7,7 +7,7 @@ export interface IReminder {
     currency: string;
     lapse: number;
     dateStart: string;
-    dateEnd: string;
+    dateEnd: string | null;
     category: number; // id
     categoryName: string;
     owner: number; // id
@@ -23,7 +23,7 @@ export interface IReminderFetch {
     error: string | null;
 }
 
-export const fetchReminders = async (month: number, year: number): Promise<IReminder[]> => {
+export const fetchReminders = async (month: number, year: number, lastID: string | null): Promise<IReminder[]> => {
     await new Promise((resolve) => {
         setTimeout(resolve, 800);
     });

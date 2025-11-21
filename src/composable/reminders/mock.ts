@@ -1,6 +1,11 @@
 import { faker } from "@faker-js/faker/locale/en";
 import type { IReminder } from "./fetch";
 
+
+function getRandomInt(max: number) {
+    return Math.floor(Math.random() * max);
+}
+
 export function generateReminders(resultCount: number): IReminder[] {
     const reminders: IReminder[] = [];
     const categories = ['Rent', 'Utilities', 'Subscription', 'Insurance', 'Loan Payment', 'Salary', 'Investment', 'Bill Payment'];
@@ -19,7 +24,7 @@ export function generateReminders(resultCount: number): IReminder[] {
             currency: faker.helpers.arrayElement(['USD', 'EUR', 'ARS']),
             lapse: lapse,
             dateStart: dateStart.toISOString(),
-            dateEnd: dateEnd.toISOString(),
+            dateEnd: (getRandomInt(20) % 2 === 0) ? dateEnd.toISOString() : null,
             category: faker.number.int({ min: 1, max: 8 }),
             categoryName: categories[faker.number.int({ min: 0, max: categories.length - 1 })],
             owner: faker.number.int({ min: 1, max: 3 }),
