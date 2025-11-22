@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Button from "@/components/ui/button/Button.vue";
 import { RouterLink } from "vue-router";
-import MonthAndYearSelect from "@/components/MonthAndYearSelect.vue";
+import { MonthAndYearSelect } from "@/components/custom_ui/MonthAndYearSelect";
 import ReminderList from "@/components/ReminderList.vue";
 import { ref } from "vue";
 import { PlusCircleIcon } from "lucide-vue-next";

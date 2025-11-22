@@ -5,7 +5,8 @@ import { useAuth } from "@/composable/useAuth.ts";
 import EntryFormView from "@/views/entries/EntryFormView.vue";
 import EntryList from "@/views/entries/EntryListView.vue";
 import ReminderFormView from "@/views/reminders/ReminderFormView.vue";
-import RemindersListView from '@/views/reminders/RemindersListView.vue';
+import ReminderListView from '@/views/reminders/ReminderListView.vue';
+import ReminderDetailView from '@/views/reminders/ReminderDetailView.vue';
 
 const auth = useAuth();
 
@@ -36,12 +37,19 @@ const router = createRouter({
         {
             path: '/reminder/list',
             name: 'reminder-list',
-            component: RemindersListView,
+            component: ReminderListView,
         },
         {
             path: '/reminder/add',
             name: 'add-reminder',
             component: ReminderFormView,
+        },
+        {
+            path: '/reminder/detail/:id',
+            // This is for ID v7
+            // path: '/reminder/detail/:id([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})',
+            name: 'reminder-detail',
+            component: ReminderDetailView
         }
         // {
         //     path: '/about',

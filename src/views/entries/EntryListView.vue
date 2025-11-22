@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import EntryList from "@/components/EntryList.vue";
-import MonthAndYearSelect from "@/components/MonthAndYearSelect.vue";
+import { MonthAndYearSelect } from "@/components/custom_ui/MonthAndYearSelect";
 import { ref } from "vue";
+import { RouterLink } from "vue-router";
+import { PlusCircleIcon } from "lucide-vue-next";
+import Button from "@/components/ui/button/Button.vue";
 
 const accountList = [
     { id: 1, name: "Personal" },
@@ -20,6 +23,12 @@ const month = ref<number>(currDate.getMonth());
 <template>
     <div class="flex justify-between items-center border-b">
         <h1 class="text-xl font-bold py-2 text-primary">Entry List</h1>
+        <Button asChild>
+            <RouterLink to="/entry/add">
+                <PlusCircleIcon />
+                <span>Add Entry</span>
+            </RouterLink>
+        </Button>
     </div>
     <div>
         <MonthAndYearSelect v-model:month="month" v-model:year="year" />
