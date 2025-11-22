@@ -27,6 +27,10 @@ export const fetchReminders = async (month: number, year: number, lastID: string
     await new Promise((resolve) => {
         setTimeout(resolve, 800);
     });
-    // TODO: Use month and year to filter reminders when backend is ready
     return generateReminders(10);
+}
+
+export const fetchReminderDetails = async (reminderID: string): Promise<IReminder> => {
+    const reminders = generateReminders(1)
+    return reminders[0]
 }
