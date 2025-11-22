@@ -45,20 +45,11 @@ const router = createRouter({
             component: ReminderFormView,
         },
         {
-            path: '/reminder/detail/:id',
             // This is for ID v7
-            // path: '/reminder/detail/:id([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})',
+            path: '/reminder/detail/:id([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})',
             name: 'reminder-detail',
             component: ReminderDetailView
         }
-        // {
-        //     path: '/about',
-        //     name: 'about',
-        //     // route level code-splitting
-        //     // this generates a separate chunk (About.[hash].js) for this route
-        //     // which is lazy-loaded when the route is visited.
-        //     component: () => import('../views/AboutView.vue'),
-        // },
     ],
 })
 

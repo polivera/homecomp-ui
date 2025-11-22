@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker/locale/en";
 import type { IReminder } from "./fetch";
+import { uuidv7 } from "uuidv7";
 
 
 function getRandomInt(max: number) {
@@ -18,7 +19,7 @@ export function generateReminders(resultCount: number): IReminder[] {
         const dateEnd = faker.date.future({ years: 1, refDate: dateStart });
 
         reminders.push({
-            id: `${i + 1}`,
+            id: uuidv7(),
             amount: faker.number.float({ min: 10, max: 2000, fractionDigits: 2 }),
             description: faker.commerce.productName(),
             currency: faker.helpers.arrayElement(['USD', 'EUR', 'ARS']),
