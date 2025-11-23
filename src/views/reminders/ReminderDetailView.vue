@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ReminderDetails from "@/components/ReminderDetails.vue";
 import Button from "@/components/ui/button/Button.vue";
+import { PlusCircleIcon } from "lucide-vue-next";
 import { RouterLink } from "vue-router";
 </script>
 

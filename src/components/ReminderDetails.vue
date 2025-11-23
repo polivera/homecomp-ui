@@ -10,17 +10,27 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetFooter,
-    SheetHeader,
-    SheetTitle,
-} from "@/components/ui/sheet";
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+} from "@/components/ui/form";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 import { useReminders } from "@/composable/reminders";
-import { useEntries } from "@/composable/entries/useEntry";
+import { toTypedSchema } from "@vee-validate/zod";
+import z from "zod";
+import { useForm } from "vee-validate";
 
 const props = defineProps<{
     reminderID: string;
@@ -28,43 +38,29 @@ const props = defineProps<{
 
 const { formatMoney } = useCurrency();
 const { detailData: reminderData, detail: reminderFetch } = useReminders();
-const { storeEntry, entryStore } = useEntries();
 
-const isPaySheetOpen = ref(false);
-const paymentAmount = ref(0);
+const dialogOpen = ref(false);
 
-watch(
-    () => reminderData.value.data?.amount,
-    (newAmount) => {
-        if (newAmount) {
-            paymentAmount.value = newAmount;
-        }
-    }
+const formSchema = toTypedSchema(
+    z.object({
+        amount: z.number().positive().multipleOf(0.01),
+        date: z.string(),
+    }),
 );
 
-const openPaySheet = () => {
-    if (reminderData.value.data) {
-        paymentAmount.value = reminderData.value.data.amount;
-    }
-    isPaySheetOpen.value = true;
-};
+const form = useForm({
+    validationSchema: formSchema,
+    initialValues: {
+        amount: 0,
+    },
+});
 
-const handlePay = async () => {
-    if (!reminderData.value.data) return;
-
-    await storeEntry({
-        id: null,
-        account: 1, // TODO: make configurable or get from context
-        category: reminderData.value.data.category,
-        household: reminderData.value.data.household,
-        date: new Date().toISOString().split("T")[0],
-        description: reminderData.value.data.description,
-        amount: paymentAmount.value,
-        entryType: "expense",
-    });
-
-    isPaySheetOpen.value = false;
-};
+const formSubmit = form.handleSubmit(async (values) => {
+    console.log("form submitted");
+    console.log(values);
+    // TODO: actual submission logic here
+    dialogOpen.value = false;
+});
 
 const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
@@ -152,49 +148,64 @@ onMounted(async () => {
                 </div>
             </div>
 
-            <div class="pt-4">
-                <Button @click="openPaySheet" class="w-full">
-                    Pay
-                </Button>
-            </div>
+            <Dialog v-model:open="dialogOpen">
+                <DialogTrigger as-child>
+                    <Button class="w-full"> Pay </Button>
+                </DialogTrigger>
+                <DialogContent class="sm:max-w-[425px]">
+                    <form @submit="formSubmit">
+                        <DialogHeader>
+                            <DialogTitle>Edit profile</DialogTitle>
+                            <DialogDescription>
+                                Pay current reminder to convert it to entry
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div class="grid gap-4">
+                            <FormField
+                                v-slot="{ componentField }"
+                                name="amount"
+                            >
+                                <FormItem class="mt-4">
+                                    <FormLabel>
+                                        Amount
+                                        <span class="text-destructive">*</span>
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            v-bind="componentField"
+                                            step="0.01"
+                                            type="number"
+                                            class="w-full"
+                                            placeholder="Enter amount"
+                                        />
+                                    </FormControl>
+                                </FormItem>
+                            </FormField>
+                            <FormField v-slot="{ componentField }" name="date">
+                                <FormItem class="mt-4">
+                                    <FormLabel>
+                                        Start Date
+                                        <span class="text-destructive">*</span>
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            v-bind="componentField"
+                                            type="date"
+                                            class="w-full"
+                                        />
+                                    </FormControl>
+                                </FormItem>
+                            </FormField>
+                        </div>
+                        <DialogFooter>
+                            <DialogClose as-child>
+                                <Button variant="outline"> Cancel </Button>
+                            </DialogClose>
+                            <Button type="submit"> Save changes </Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
         </CardContent>
     </Card>
-
-    <Sheet v-model:open="isPaySheetOpen">
-        <SheetContent>
-            <SheetHeader>
-                <SheetTitle>Pay Reminder</SheetTitle>
-                <SheetDescription>
-                    {{ reminderData.data?.description }}
-                </SheetDescription>
-            </SheetHeader>
-
-            <div class="py-6 space-y-4">
-                <div>
-                    <label class="text-sm font-medium">Amount</label>
-                    <Input
-                        v-model.number="paymentAmount"
-                        type="number"
-                        step="0.01"
-                        class="mt-1"
-                    />
-                </div>
-            </div>
-
-            <SheetFooter>
-                <Button
-                    variant="outline"
-                    @click="isPaySheetOpen = false"
-                >
-                    Cancel
-                </Button>
-                <Button
-                    @click="handlePay"
-                    :disabled="entryStore.isLoading"
-                >
-                    {{ entryStore.isLoading ? "Saving..." : "Confirm Payment" }}
-                </Button>
-            </SheetFooter>
-        </SheetContent>
-    </Sheet>
 </template>

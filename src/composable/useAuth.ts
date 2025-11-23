@@ -1,4 +1,4 @@
-import {computed, type ComputedRef, ref} from "vue";
+import { computed, type ComputedRef, ref } from "vue";
 
 export interface User {
     email: string;
@@ -50,14 +50,14 @@ const getUserLocalStorage = (): User | null => {
     return null;
 }
 
-const setUserLocalStorage = (user: User | null) => {
-    if (!user) {
+const setUserLocalStorage = (localUser: User | null) => {
+    if (!localUser) {
         localStorage.removeItem(USER_DATA_STORAGE_KEY);
         compState.isAuthenticated.value = false;
         return;
     }
     compState.isAuthenticated.value = true;
-    localStorage.setItem(USER_DATA_STORAGE_KEY, JSON.stringify(user));
+    localStorage.setItem(USER_DATA_STORAGE_KEY, JSON.stringify(localUser));
 }
 
 const getUserData = (): User | null => {
