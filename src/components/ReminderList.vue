@@ -126,7 +126,8 @@ const showReminders = computed(
                                 </span>
                             </div>
                             <div class="text-sm text-gray-500">
-                                Every {{ reminder.lapse }} days
+                                Every {{ reminder.interval }}
+                                {{ reminder.intervalUnit }}
                             </div>
                         </div>
                     </RouterLink>

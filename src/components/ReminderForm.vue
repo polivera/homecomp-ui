@@ -22,7 +22,7 @@ import {
 } from "@/components/custom_ui/FormSelect";
 import { useDate } from "@/composable/useDate";
 import { useCurrency } from "@/composable/useCurrency";
-import { useLapse } from "@/composable/useLapse";
+import { useReminderInterval } from "@/composable/useReminderInterval";
 
 const { categoryFetch, fetchCategories } = useCategories();
 const { storedData: reminderStore, store: storeReminder } = useReminders();
@@ -30,14 +30,14 @@ const { fetchHouseholds, householdFetch } = useHousehold();
 const { getCurrencyOptions, getDefaultCurrency } = useCurrency();
 const { getFirstDayOfNextMonthString } = useDate();
 const { toast } = useToast();
-const { getLapses } = useLapse();
+const { getIntervals: getLapses } = useReminderInterval();
 
 // Currency options
 const currencyOptions = getCurrencyOptions();
 
 // Lapse options (days between reminders)
 const lapseOptions: SelectOption[] = getLapses().map((it) => ({
-    value: it.days,
+    value: it.key,
     label: it.description,
 }));
 

@@ -31,6 +31,7 @@ import { useReminders } from "@/composable/reminders";
 import { toTypedSchema } from "@vee-validate/zod";
 import z from "zod";
 import { useForm } from "vee-validate";
+import { useReminderInterval } from "@/composable/useReminderInterval";
 
 const props = defineProps<{
     reminderID: string;
@@ -38,6 +39,7 @@ const props = defineProps<{
 
 const { formatMoney } = useCurrency();
 const { detailData: reminderData, detail: reminderFetch } = useReminders();
+const { getIntervalText } = useReminderInterval();
 
 const dialogOpen = ref(false);
 
@@ -99,7 +101,7 @@ onMounted(async () => {
                     <CardTitle class="text-xl">{{
                         reminderData.data.description
                     }}</CardTitle>
-                    <CardDescription v-if="reminderData.data.householdName">
+                    <CardDescription v-if="reminderData.data.household">
                         <strong>Household:</strong>
                         {{ reminderData.data.householdName }}
                     </CardDescription>
@@ -123,10 +125,15 @@ onMounted(async () => {
                 <div>
                     <span class="text-gray-500">Frequency</span>
                     <p class="font-medium">
-                        {{ formatLapse(reminderData.data.lapse) }}
+                        {{
+                            getIntervalText(
+                                reminderData.data.interval,
+                                reminderData.data.intervalUnit,
+                            )
+                        }}
                     </p>
                 </div>
-                <div>
+                <div v-if="reminderData.data.household">
                     <span class="text-gray-500">Owner</span>
                     <p class="font-medium">{{ reminderData.data.ownerName }}</p>
                 </div>
@@ -134,6 +141,12 @@ onMounted(async () => {
                     <span class="text-gray-500">Start Date</span>
                     <p class="font-medium">
                         {{ formatDate(reminderData.data.dateStart) }}
+                    </p>
+                </div>
+                <div>
+                    <span class="text-gray-500">Next Due Date</span>
+                    <p class="font-medium">
+                        {{ formatDate(reminderData.data.dateNextDue) }}
                     </p>
                 </div>
                 <div>

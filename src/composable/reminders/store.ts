@@ -1,22 +1,6 @@
 import { ref, type Ref } from "vue";
-import type { IReminder } from "./fetch";
+import type { IReminderForm, IReminderStore } from "./types";
 
-export interface IReminderForm {
-    id: string | null;
-    amount: number;
-    description: string;
-    currency: string;
-    lapse: number;
-    dateStart: string;
-    dateEnd: string | null;
-    category: number;
-    household: number | null;
-}
-
-export interface IReminderStore {
-    isLoading: boolean;
-    error: string | null;
-}
 
 export const storeReminder = async (reminderStore: Ref<IReminderStore>, reminder: IReminderForm) => {
     reminderStore.value.isLoading = true;

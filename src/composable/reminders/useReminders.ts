@@ -1,5 +1,5 @@
 import { computed, ref, type Ref } from "vue";
-import { fetchReminders, fetchReminderDetails, type IReminderDetail, type IReminderFetch } from "./fetch";
+import { fetchReminders, fetchReminderDetails } from "./fetch";
 import { storeReminder, type IReminderForm, type IReminderStore } from "./store";
 
 const fetch = async (reminderFetch: Ref<IReminderFetch>, month: number, year: number, lastID: string | null = null) => {
