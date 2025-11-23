@@ -1,4 +1,5 @@
 import { ref, type Ref } from "vue";
+import type { IReminder } from "./fetch";
 
 export interface IReminderForm {
     id: string | null;
@@ -16,7 +17,6 @@ export interface IReminderStore {
     isLoading: boolean;
     error: string | null;
 }
-
 
 export const storeReminder = async (reminderStore: Ref<IReminderStore>, reminder: IReminderForm) => {
     reminderStore.value.isLoading = true;

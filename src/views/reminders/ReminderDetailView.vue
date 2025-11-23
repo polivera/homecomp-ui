@@ -1,10 +1,18 @@
 <script setup lang="ts">
 import ReminderDetails from "@/components/ReminderDetails.vue";
-
-console.log("reminder details view");
+import Button from "@/components/ui/button/Button.vue";
+import { RouterLink } from "vue-router";
 </script>
 
 <template>
-    <h1>this is the reminder details view</h1>
-    <ReminderDetails />
+    <div class="flex justify-between items-center border-b mb-5">
+        <h1 class="text-xl font-bold py-2 text-primary">Reminder Details</h1>
+        <Button asChild>
+            <RouterLink to="/reminder/list">
+                <PlusCircleIcon />
+                <span>Back</span>
+            </RouterLink>
+        </Button>
+    </div>
+    <ReminderDetails reminderID="123123" />
 </template>

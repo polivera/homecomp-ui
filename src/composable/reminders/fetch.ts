@@ -23,6 +23,12 @@ export interface IReminderFetch {
     error: string | null;
 }
 
+export interface IReminderDetail {
+    isLoading: boolean;
+    error: string | null
+    data: IReminder | null
+}
+
 export const fetchReminders = async (month: number, year: number, lastID: string | null): Promise<IReminder[]> => {
     await new Promise((resolve) => {
         setTimeout(resolve, 800);
@@ -31,6 +37,9 @@ export const fetchReminders = async (month: number, year: number, lastID: string
 }
 
 export const fetchReminderDetails = async (reminderID: string): Promise<IReminder> => {
+    await new Promise((resolve) => {
+        setTimeout(resolve, 100);
+    })
     const reminders = generateReminders(1)
     return reminders[0]
 }

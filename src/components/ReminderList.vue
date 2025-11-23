@@ -58,6 +58,7 @@ watch(
     async () => {
         // Clear reminders and update display date
         reminderFetchData.value.reminders = [];
+        // TODO: Change this to use useDate
         showDateStr.value = new Date(
             props.year,
             props.month,
@@ -91,7 +92,10 @@ const showReminders = computed(
             >
                 <TableCell class="p-0">
                     <RouterLink
-                        :to="{ name: 'reminder-detail', params: { id: reminder.id } }"
+                        :to="{
+                            name: 'reminder-detail',
+                            params: { id: reminder.id },
+                        }"
                         class="block p-4 font-medium"
                     >
                         <div class="flex flex-col gap-1">
@@ -107,7 +111,9 @@ const showReminders = computed(
                                 </span>
                             </div>
                             <div class="flex justify-between items-end">
-                                <span class="text-left text-[1rem] sm:text-base">
+                                <span
+                                    class="text-left text-[1rem] sm:text-base"
+                                >
                                     {{ reminder.description }}
                                 </span>
                                 <span class="font-semibold">
