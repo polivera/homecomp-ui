@@ -1,6 +1,12 @@
 import { computed, ref, type Ref } from "vue";
 import { fetchReminders, fetchReminderDetails } from "./fetch";
-import { storeReminder, type IReminderForm, type IReminderStore } from "./store";
+import { storeReminder } from "./store";
+import {
+    type IReminderDetail,
+    type IReminderFetch,
+    type IReminderForm,
+    type IReminderStore
+} from "./types";
 
 const fetch = async (reminderFetch: Ref<IReminderFetch>, month: number, year: number, lastID: string | null = null) => {
     reminderFetch.value.isLoading = true;
