@@ -1,45 +1,44 @@
 import { computed, ref } from "vue";
 import type { User, LoginCredentials, AuthResponse, UseAuth } from "./types";
+import { useStorage } from "../storage";
 
 
 const USER_DATA_STORAGE_KEY = "xap-user" as const;
+
+const storage = useStorage();
 
 const compState = {
     isLoading: ref<boolean>(false),
     isAuthenticated: ref<boolean>(false),
     user: ref<User | null>(null)
 }
-let isInitialized = false;
 
 // init - login composable
 // TODO: Create an abstraction for local storage so it can be tested
 const init = () => {
-    if (isInitialized) return;
-    isInitialized = true;
-
-    const jsonUser = localStorage.getItem(USER_DATA_STORAGE_KEY);
+    if (compState.user.value) return;
+    const jsonUser = storage.getItem(USER_DATA_STORAGE_KEY);
     if (jsonUser) {
         try {
             compState.user.value = JSON.parse(jsonUser);
             compState.isAuthenticated.value = true;
         } catch (error) {
             console.log('User data parse error');
-            localStorage.removeItem(USER_DATA_STORAGE_KEY);
+            storage.removeItem(USER_DATA_STORAGE_KEY);
         }
     }
 }
 
-// setUserLocalStorage - Manage localStorage and compState
-const setUserLocalStorage = (localUser: User | null) => {
+// setUserStorage - Manage localStorage and compState
+const setUserStorage = (localUser: User | null) => {
     if (!localUser) {
-        localStorage.removeItem(USER_DATA_STORAGE_KEY);
+        storage.removeItem(USER_DATA_STORAGE_KEY);
         compState.isAuthenticated.value = false;
         compState.user.value = null;
-        isInitialized = false;
         return;
     }
     compState.isAuthenticated.value = true;
-    localStorage.setItem(USER_DATA_STORAGE_KEY, JSON.stringify(localUser));
+    storage.setItem(USER_DATA_STORAGE_KEY, JSON.stringify(localUser));
 }
 
 // login
@@ -55,19 +54,19 @@ const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
                 email: credentials.email,
                 name: 'Testonga',
             };
-            setUserLocalStorage(compState.user.value);
+            setUserStorage(compState.user.value);
             return {
                 success: true,
                 user: compState.user.value as User,
             }
         }
-        setUserLocalStorage(null)
+        setUserStorage(null)
         return {
             success: false,
             message: 'Invalid email or password'
         }
     } catch (error) {
-        setUserLocalStorage(null)
+        setUserStorage(null)
         return {
             success: false,
             message: 'Login failed. Please try again later',
@@ -85,7 +84,7 @@ const logout = async (): Promise<AuthResponse> => {
             setTimeout(resolve, 3201);
         });
 
-        setUserLocalStorage(null);
+        setUserStorage(null);
         return {
             success: true,
             message: 'logout successful'
