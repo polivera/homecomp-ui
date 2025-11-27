@@ -1,18 +1,15 @@
 import { computed, ref, type Ref } from "vue";
 import type { IAccountFetch, IUseAccount } from "./types";
-import { fetchAccounts } from "./fetch";
-
+import { fetchAccounts, fetchAccountsWithCurrency } from "./fetch";
 
 
 const fetch = async (accountFetch: Ref<IAccountFetch>): Promise<void> => {
     accountFetch.value.isLoading = true
-
     try {
         await new Promise((resolve) => {
             setTimeout(resolve, 1000)
         })
         accountFetch.value.accounts = await fetchAccounts()
-
     } catch (fetchError) {
         accountFetch.value.error = 'Failed to fetch accounts'
     } finally {
@@ -20,6 +17,20 @@ const fetch = async (accountFetch: Ref<IAccountFetch>): Promise<void> => {
     }
 }
 
+
+const fetchWithCurrency = async (accountFetch: Ref<IAccountFetch>, currency: string): Promise<void> => {
+    accountFetch.value.isLoading = true
+    try {
+        await new Promise((resolve) => {
+            setTimeout(resolve, 1000)
+        })
+        accountFetch.value.accounts = await fetchAccountsWithCurrency(currency)
+    } catch (fetchError) {
+        accountFetch.value.error = 'Failed to fetch accounts'
+    } finally {
+        accountFetch.value.isLoading = false
+    }
+}
 
 export const useAccounts = (): IUseAccount => {
     const accountFetch = ref<IAccountFetch>({
@@ -29,6 +40,7 @@ export const useAccounts = (): IUseAccount => {
     })
     return {
         accountFetch: computed(() => accountFetch.value),
-        fetch: () => fetch(accountFetch)
+        fetch: () => fetch(accountFetch),
+        fetchWithCurrency: (currency: string) => fetchWithCurrency(accountFetch, currency)
     };
 }

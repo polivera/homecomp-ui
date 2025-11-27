@@ -37,7 +37,7 @@ const emit = defineEmits<{
   submit: [values: IReminderPayFormData];
 }>();
 
-const { accountFetch, fetch: fetchAccounts } = useAccounts();
+const { accountFetch, fetchWithCurrency: fetchAccounts } = useAccounts();
 const { getTodayISO } = useDate();
 
 const dialogOpen = ref(false);
@@ -64,16 +64,14 @@ const formSubmit = form.handleSubmit(async (values) => {
 });
 
 const accountOptions = computed<SelectOption[]>(() => {
-  return accountFetch.value.accounts
-    .filter((it) => it.currency == props.payCurrency)
-    .map((account) => ({
-      value: account.id,
-      label: account.name,
-    }));
+  return accountFetch.value.accounts.map((account) => ({
+    value: account.id,
+    label: account.name,
+  }));
 });
 
 onMounted(async () => {
-  await fetchAccounts();
+  await fetchAccounts(props.payCurrency);
 });
 </script>
 

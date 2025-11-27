@@ -18,4 +18,5 @@ export interface IAccountFetch {
 export interface IUseAccount {
     accountFetch: ComputedRef<IAccountFetch>
     fetch: () => Promise<void>
+    fetchWithCurrency: (currency: string) => Promise<void>
 }
