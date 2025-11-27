@@ -21,7 +21,7 @@ const getIntervals = (): Interval[] => {
 }
 
 const getIntervalText = (interval: number, type: EIntervals) => {
-    return intervals.find((it) => it.interval === interval && it.type == it.type)?.description || 'Interval not found'
+    return intervals.find((it) => it.interval === interval && it.type == type)?.description || 'Interval not found'
 }
 
 
