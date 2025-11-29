@@ -17,7 +17,7 @@ import { type IEntryForm, useEntries } from "@/composable/entries";
 import { useToast } from "@/components/ui/toast";
 import { Spinner } from "@/components/ui/spinner";
 import { useHousehold } from "@/composable/useHousehold.ts";
-import FormSelect from "./custom_ui/FormSelect/FormSelect.vue";
+import FormSelect from "@/components/custom_ui/FormSelect/FormSelect.vue";
 import type { SelectOption } from "@/components/custom_ui/FormSelect";
 import type { IAccount } from "@/composable/accounts";
 

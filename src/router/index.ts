@@ -2,8 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginFormView from "@/views/LoginFormView.vue";
 import Dashboard from "@/views/Dashboard.vue";
 import { useAuth } from "@/composable/auth";
-import EntryFormView from "@/views/entries/EntryFormView.vue";
-import EntryList from "@/views/entries/EntryListView.vue";
+import { EntryListView, EntryFormView } from "@/features/entries/views";
 import { ReminderListView, ReminderFormView, ReminderDetailView } from '@/features/reminders/views'
 
 const auth = useAuth();
@@ -30,7 +29,7 @@ const router = createRouter({
         {
             path: '/entry/list',
             name: 'entry-list',
-            component: EntryList,
+            component: EntryListView,
         },
         {
             path: '/reminder/list',
