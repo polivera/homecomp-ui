@@ -4,9 +4,7 @@ import Dashboard from "@/views/Dashboard.vue";
 import { useAuth } from "@/composable/auth";
 import EntryFormView from "@/views/entries/EntryFormView.vue";
 import EntryList from "@/views/entries/EntryListView.vue";
-import ReminderFormView from "@/views/reminders/ReminderFormView.vue";
-import ReminderListView from '@/views/reminders/ReminderListView.vue';
-import ReminderDetailView from '@/views/reminders/ReminderDetailView.vue';
+import { ReminderListView, ReminderFormView, ReminderDetailView } from '@/features/reminders/views'
 
 const auth = useAuth();
 

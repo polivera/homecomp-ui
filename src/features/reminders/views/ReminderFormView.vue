@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import ReminderDetails from "@/components/ReminderDetails.vue";
+import { ReminderForm } from "@/features/reminders/components";
 import Button from "@/components/ui/button/Button.vue";
 import { ArrowLeftIcon } from "lucide-vue-next";
-import { RouterLink } from "vue-router";
 </script>
 
 <template>
-  <div class="flex justify-between items-center border-b mb-5">
-    <h1 class="text-xl font-bold py-2 text-primary">Reminder Details</h1>
+  <div class="flex justify-between items-center border-b">
+    <h1 class="text-xl font-bold py-2 text-primary">Reminder Form - Add</h1>
     <Button variant="outline" asChild>
       <RouterLink to="/reminder/list">
         <ArrowLeftIcon />
@@ -15,5 +14,9 @@ import { RouterLink } from "vue-router";
       </RouterLink>
     </Button>
   </div>
-  <ReminderDetails reminderID="123123" />
+  <div class="py-4">
+    <ReminderForm />
+  </div>
 </template>
+
+<style scoped></style>

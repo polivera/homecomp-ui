@@ -19,10 +19,9 @@ import { Spinner } from "@/components/ui/spinner";
 import { useHousehold } from "@/composable/useHousehold.ts";
 import FormSelect from "./custom_ui/FormSelect/FormSelect.vue";
 import type { SelectOption } from "@/components/custom_ui/FormSelect";
-import { fetchAccounts } from "@/composable/accounts/fetch";
-import type { IAccount } from "@/composable/accounts/types";
+import type { IAccount } from "@/composable/accounts";
 
-const { accountFetch, fetch: fetchAccount } = useAccounts();
+const { accountFetch, fetch: fetchAccounts } = useAccounts();
 const { categoryFetch, fetchCategories } = useCategories();
 const { entryStore, storeEntry } = useEntries();
 const { fetchHouseholds, householdFetch } = useHousehold();
@@ -62,7 +61,9 @@ const form = useForm({
   initialValues: {
     entryType: "expense", // Pre-select here
     date: new Date().toISOString().split("T")[0],
-    account: accountFetch.value.accounts.find((account) => account.default)?.id,
+    account:
+      accountFetch.value.accounts.find((account) => account.default)?.id ||
+      accountFetch.value.accounts[0]?.id,
   },
 });
 
@@ -90,8 +91,9 @@ const formSubmit = form.handleSubmit(async (values) => {
     values: {
       entryType: "expense",
       date: new Date().toISOString().split("T")[0],
-      account: accountFetch.value.accounts.find((account) => account.default)
-        ?.id,
+      account:
+        accountFetch.value.accounts.find((account) => account.default)?.id ||
+        accountFetch.value.accounts[0]?.id,
       category: categoryFetch.value.categories.find(
         (category) => category.name === "Uncategorized",
       )?.id,
@@ -110,7 +112,8 @@ const getAccounts = async () => {
   await fetchAccounts();
   form.setFieldValue(
     "account",
-    accountFetch.value.accounts.find((account) => account.default)?.id,
+    accountFetch.value.accounts.find((account) => account.default)?.id ||
+      accountFetch.value.accounts[0].id,
   );
 };
 
