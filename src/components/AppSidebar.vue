@@ -11,12 +11,14 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+
 import {
   Home,
   PlusCircleIcon,
   Wallet,
   CalendarCog,
   CreditCardIcon,
+  PiggyBankIcon,
 } from "lucide-vue-next";
 
 const { toggleSidebar, isMobile } = useSidebar();
@@ -47,6 +49,37 @@ const items = [
     title: "Credit Cards",
     url: "#",
     icon: CreditCardIcon,
+  },
+];
+
+const settings = [
+  {
+    title: "Accounts",
+    url: "#",
+    icon: PiggyBankIcon,
+  },
+  {
+    title: "Credit Cards",
+    url: "#",
+    icon: PiggyBankIcon,
+  },
+  {
+    title: "Households",
+    url: "#",
+    icon: PiggyBankIcon,
+  },
+];
+
+const admin = [
+  {
+    title: "Categories",
+    url: "#",
+    icon: PiggyBankIcon,
+  },
+  {
+    title: "Users",
+    url: "#",
+    icon: PiggyBankIcon,
   },
 ];
 </script>
@@ -81,7 +114,32 @@ const items = [
           </SidebarMenuItem>
         </SidebarGroupContent>
       </SidebarGroup>
+      <SidebarGroup>
+        <SidebarGroupLabel>Settings</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenuItem v-for="item in settings" :key="item.title">
+            <SidebarMenuButton asChild>
+              <RouterLink :to="item.url">
+                <component :is="item.icon" />
+                <span @click="mobileToggleSidebar">{{ item.title }}</span>
+              </RouterLink>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarGroupContent>
+      </SidebarGroup>
+      <SidebarGroup>
+        <SidebarGroupLabel>Admin</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenuItem v-for="item in admin" :key="item.title">
+            <SidebarMenuButton asChild>
+              <RouterLink :to="item.url">
+                <component :is="item.icon" />
+                <span @click="mobileToggleSidebar">{{ item.title }}</span>
+              </RouterLink>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarGroupContent>
+      </SidebarGroup>
     </SidebarContent>
-    <SidebarFooter />
   </Sidebar>
 </template>

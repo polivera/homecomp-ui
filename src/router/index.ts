@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LoginFormView from "@/views/LoginFormView.vue";
+import { LoginFormView } from "@/features/auth/views/";
 import Dashboard from "@/views/Dashboard.vue";
 import { useAuth } from "@/composable/auth";
 import { EntryListView, EntryFormView } from "@/features/entries/views";

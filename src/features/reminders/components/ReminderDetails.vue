@@ -12,7 +12,7 @@ import {
 import { onMounted } from "vue";
 import { useReminders } from "@/composable/reminders";
 import { useReminderInterval } from "@/composable/useReminderInterval";
-import { ReminderPayForm } from "@/components/custom_ui/ReminderPayForm";
+import ReminderPayForm from "./ReminderPayForm.vue";
 
 const props = defineProps<{
   reminderID: string;

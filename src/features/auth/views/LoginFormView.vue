@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LoginForm from "@/components/LoginForm.vue";
+import { LoginForm } from "@/features/auth/components";
 </script>
 
 <template>
@@ -11,12 +11,8 @@ import LoginForm from "@/components/LoginForm.vue";
         </div>
       </div>
     </div>
-    <div class="relative hidden bg-muted lg:block">
-
-    </div>
+    <div class="relative hidden bg-muted lg:block"></div>
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
