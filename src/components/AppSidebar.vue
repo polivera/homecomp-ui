@@ -2,7 +2,6 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -19,6 +18,12 @@ import {
   CalendarCog,
   CreditCardIcon,
   PiggyBankIcon,
+  WalletCardsIcon,
+  HousePlusIcon,
+  ChartColumnStackedIcon,
+  UserRoundCogIcon,
+  UserPenIcon,
+  HouseIcon,
 } from "lucide-vue-next";
 
 const { toggleSidebar, isMobile } = useSidebar();
@@ -50,23 +55,33 @@ const items = [
     url: "#",
     icon: CreditCardIcon,
   },
+  {
+    title: "Households",
+    url: "#",
+    icon: HouseIcon,
+  },
 ];
 
 const settings = [
   {
-    title: "Accounts",
+    title: "My Accounts",
     url: "#",
     icon: PiggyBankIcon,
   },
   {
-    title: "Credit Cards",
+    title: "My Credit Cards",
     url: "#",
-    icon: PiggyBankIcon,
+    icon: WalletCardsIcon,
   },
   {
-    title: "Households",
+    title: "My Households",
     url: "#",
-    icon: PiggyBankIcon,
+    icon: HousePlusIcon,
+  },
+  {
+    title: "My Profile",
+    url: "#",
+    icon: UserPenIcon,
   },
 ];
 
@@ -74,12 +89,12 @@ const admin = [
   {
     title: "Categories",
     url: "#",
-    icon: PiggyBankIcon,
+    icon: ChartColumnStackedIcon,
   },
   {
     title: "Users",
     url: "#",
-    icon: PiggyBankIcon,
+    icon: UserRoundCogIcon,
   },
 ];
 </script>
