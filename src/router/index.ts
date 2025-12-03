@@ -4,6 +4,8 @@ import Dashboard from "@/views/Dashboard.vue";
 import { useAuth } from "@/composable/auth";
 import { EntryListView, EntryFormView } from "@/features/entries/views";
 import { ReminderListView, ReminderFormView, ReminderDetailView } from '@/features/reminders/views'
+import { CreditCardEntryFormView, CreditCardEntryListView, CreditCardFormView, CreditCardListView } from '@/features/credit_cards/views/';
+import { HouseholdEntryListView, HouseholdListView, HouseholdFormView } from '@/features/households/views/';
 
 const auth = useAuth();
 
@@ -22,7 +24,7 @@ const router = createRouter({
             component: Dashboard,
         },
         {
-            path: '/entry/add',
+            path: '/entry/form',
             name: 'add-entry',
             component: EntryFormView,
         },
@@ -37,7 +39,7 @@ const router = createRouter({
             component: ReminderListView,
         },
         {
-            path: '/reminder/add',
+            path: '/reminder/form',
             name: 'add-reminder',
             component: ReminderFormView,
         },
@@ -46,7 +48,44 @@ const router = createRouter({
             path: '/reminder/detail/:id([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})',
             name: 'reminder-detail',
             component: ReminderDetailView
-        }
+        },
+        // Credit Cards
+        {
+            path: '/credit-card-entry/list',
+            name: 'credit-card-entry-list',
+            component: CreditCardEntryListView
+        },
+        {
+            path: '/credit-card-entry/form',
+            name: 'credit-card-entry-add',
+            component: CreditCardEntryFormView
+        },
+        {
+            path: '/credit-card/form',
+            name: 'credit-card-add',
+            component: CreditCardFormView
+        },
+        {
+            path: '/credit-card/list',
+            name: 'credit-card-list',
+            component: CreditCardListView
+        },
+        // Households
+        {
+            path: '/household-entry/list',
+            name: 'household-entry-list',
+            component: HouseholdEntryListView
+        },
+        {
+            path: '/household/list',
+            name: 'household-list',
+            component: HouseholdListView
+        },
+        {
+            path: '/household/form',
+            name: 'household-add',
+            component: HouseholdFormView
+        },
     ],
 })
 

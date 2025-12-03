@@ -29,7 +29,6 @@ const handlePaySubmit = (values: {
 }) => {
   console.log("form submitted");
   console.log(values);
-  // TODO: actual submission logic here
 };
 
 const formatDate = (dateString: string): string => {

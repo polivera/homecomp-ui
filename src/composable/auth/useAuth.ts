@@ -4,7 +4,6 @@ import { useStorage } from "../storage";
 
 
 const USER_DATA_STORAGE_KEY = "xap-user" as const;
-
 const storage = useStorage();
 
 const compState = {
@@ -14,7 +13,6 @@ const compState = {
 }
 
 // init - login composable
-// TODO: Create an abstraction for local storage so it can be tested
 const init = () => {
     if (compState.user.value) return;
     const jsonUser = storage.getItem(USER_DATA_STORAGE_KEY);

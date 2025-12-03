@@ -29,7 +29,7 @@ const showDateStr = ref<string>(
   formatDateMonthYearOnly(props.year, props.month),
 );
 
-// TODO: Change this for the useDate one
+// TODO: Change this for the useDate one see how to pass format
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
   return date.toLocaleDateString("en-US", {
@@ -58,7 +58,7 @@ watch(
   async () => {
     // Clear reminders and update display date
     reminderFetchData.value.reminders = [];
-    // TODO: Change this to use useDate
+    // TODO: Change this to use useDate, see how to pass format
     showDateStr.value = new Date(props.year, props.month, 1).toLocaleDateString(
       "en-US",
       {

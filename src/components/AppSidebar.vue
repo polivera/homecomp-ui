@@ -52,12 +52,12 @@ const items = [
   },
   {
     title: "Credit Cards",
-    url: "#",
+    url: "/credit-card-entry/list",
     icon: CreditCardIcon,
   },
   {
     title: "Households",
-    url: "#",
+    url: "/household-entry/list",
     icon: HouseIcon,
   },
 ];
@@ -70,12 +70,12 @@ const settings = [
   },
   {
     title: "My Credit Cards",
-    url: "#",
+    url: "/credit-card/list",
     icon: WalletCardsIcon,
   },
   {
     title: "My Households",
-    url: "#",
+    url: "/household/list",
     icon: HousePlusIcon,
   },
   {
@@ -108,7 +108,7 @@ const admin = [
         <SidebarGroupContent>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <RouterLink to="/entry/add">
+              <RouterLink to="/entry/form">
                 <PlusCircleIcon />
                 <span @click="mobileToggleSidebar">Add Entry</span>
               </RouterLink>

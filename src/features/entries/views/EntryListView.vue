@@ -24,7 +24,7 @@ const month = ref<number>(currDate.getMonth());
   <div class="flex justify-between items-center border-b">
     <h1 class="text-xl font-bold py-2 text-primary">Entry List</h1>
     <Button asChild>
-      <RouterLink to="/entry/add">
+      <RouterLink to="/entry/form">
         <PlusCircleIcon />
         <span>Add Entry</span>
       </RouterLink>

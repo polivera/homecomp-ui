@@ -2,7 +2,25 @@
  * Date utility composable
  * Provides helper functions for common date operations
  */
-export const useDate = () => {
+
+
+export const useDate = (locale?: string) => {
+    locale = locale || "en-US"
+    const currentDate = new Date();
+
+    const getCurrentDate = (): Date => {
+        return currentDate;
+    }
+
+    const getCurrentMonth = (): number => {
+        return currentDate.getMonth();
+    }
+
+    const getCurrentYear = (): number => {
+        return currentDate.getFullYear();
+    }
+
+    // TODO: change this name
     const formatDateToLocal = (date: Date): string => {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -10,9 +28,25 @@ export const useDate = () => {
         return `${year}-${month}-${day}`;
     };
 
+    const getMonthName = (month: number) => {
+        const auxDate = new Date(getCurrentYear(), month, 1);
+        return auxDate.toLocaleString(locale, { month: "long" });
+    }
+
+    const formatDate = (dateToFormat: Date, monthFormat: any, yearFormat: any): string => {
+        monthFormat = monthFormat || "long"
+        yearFormat = yearFormat || "long"
+        return dateToFormat.toLocaleDateString(
+            locale,
+            {
+                month: monthFormat,
+                year: yearFormat,
+            },
+        );
+    }
+
     const getFirstDayOfNextMonth = (): Date => {
-        const today = new Date();
-        return new Date(today.getFullYear(), today.getMonth() + 1, 1);
+        return new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
     };
 
     const getFirstDayOfNextMonthString = (): string => {
@@ -20,12 +54,11 @@ export const useDate = () => {
     }
 
     const getTodayISO = (): string => {
-        return formatDateToLocal(new Date());
+        return formatDateToLocal(currentDate);
     };
 
     const getFirstDayOfCurrentMonth = (): Date => {
-        const today = new Date();
-        return new Date(today.getFullYear(), today.getMonth(), 1);
+        return new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     };
 
     const getFirstDayOfCurrentMonthString = (): string => {
@@ -33,8 +66,7 @@ export const useDate = () => {
     }
 
     const getLastDayOfCurrentMonth = (): Date => {
-        const today = new Date();
-        return new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        return new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
     };
 
     const getLastDayOfCurrentMonthString = (): string => {
@@ -51,6 +83,11 @@ export const useDate = () => {
     }
 
     return {
+        getCurrentDate,
+        getCurrentMonth,
+        getCurrentYear,
+        getMonthName,
+        formatDate,
         getFirstDayOfNextMonth,
         getFirstDayOfNextMonthString,
         getTodayISO,

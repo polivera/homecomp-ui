@@ -1,26 +1,29 @@
 <script setup lang="ts">
 import Button from "@/components/ui/button/Button.vue";
+import { PlusCircleIcon } from "lucide-vue-next";
 import { RouterLink } from "vue-router";
 import { MonthAndYearSelect } from "@/components/custom_ui/MonthAndYearSelect";
-import { ReminderList } from "@/features/reminders/components";
+import { useDate } from "@/composable/useDate";
 import { ref } from "vue";
-import { PlusCircleIcon } from "lucide-vue-next";
 
-const currentDate = new Date();
-const selectedMonth = ref<number>(currentDate.getMonth());
-const selectedYear = ref<number>(currentDate.getFullYear());
+const { getCurrentMonth, getCurrentYear } = useDate();
+const selectedMonth = ref<number>(getCurrentMonth());
+const selectedYear = ref<number>(getCurrentYear());
 </script>
 
 <template>
   <div class="flex justify-between items-center border-b mb-5">
-    <h1 class="text-xl font-bold py-2 text-primary">Reminders List</h1>
+    <h1 class="text-xl font-bold py-2 text-primary">
+      Credit Card Entries List
+    </h1>
     <Button asChild>
-      <RouterLink to="/reminder/form">
+      <RouterLink to="/credit-card-entry/form">
         <PlusCircleIcon />
-        <span>Add Reminder</span>
+        <span>Add Credit Card Entry</span>
       </RouterLink>
     </Button>
   </div>
+
   <div class="flex flex-col gap-4 mt-5">
     <MonthAndYearSelect
       :month="selectedMonth"
@@ -28,7 +31,5 @@ const selectedYear = ref<number>(currentDate.getFullYear());
       @update:month="(month) => (selectedMonth = month)"
       @update:year="(year) => (selectedYear = year)"
     />
-
-    <ReminderList :month="selectedMonth" :year="selectedYear" />
   </div>
 </template>
