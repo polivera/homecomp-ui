@@ -3,27 +3,20 @@ import { computed } from "vue";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { onMounted } from "vue";
 import FormSelect from "@/components/custom_ui/FormSelect/FormSelect.vue";
 import type { SelectOption } from "@/components/custom_ui/FormSelect";
 import { useDate } from "@/composable/useDate";
 import { useCreditCards } from "@/composable/creditcards/useCreditCard";
 import { useCurrency } from "@/composable/currency";
+import { FormInput, InputType } from "@/components/custom_ui/FormInput";
+import { useCategories } from "@/composable/categories";
 
 const { getFirstDayOfNextMonthString } = useDate();
 const { fetchedData: ccData, fetch: ccFetch } = useCreditCards();
 const { fetch: currencyFetch, fetchData: currencyData } = useCurrency();
-
-// TODO: Make currency not enum?
-// TODO: Change remining date
+const {} = useCategories();
 
 // Fill credit cards data dropdown
 const creditCards = computed<SelectOption[]>(() =>
@@ -86,7 +79,7 @@ const formSubmit = form.handleSubmit(async (values) => {
   // Reset form after submission
   form.resetForm({
     values: {
-      startDate: new Date().toISOString().split("T")[0],
+      startDate: getFirstDayOfNextMonthString(),
       interest: 0,
       creditCard: undefined,
       description: "",
@@ -113,21 +106,16 @@ onMounted(async () => {
       :items="creditCards"
       class="w-full"
       :isLoading="ccData.isLoading"
+      :required="true"
     />
 
-    <FormField v-slot="{ componentField }" name="description">
-      <FormItem>
-        <FormLabel>Description</FormLabel>
-        <FormControl>
-          <Input
-            v-bind="componentField"
-            type="text"
-            placeholder="e.g., Monthly grocery purchase"
-            class="w-full"
-          />
-        </FormControl>
-      </FormItem>
-    </FormField>
+    <FormInput
+      name="description"
+      label="Description"
+      :required="true"
+      :type="InputType.Text"
+      placeholder="e.g., My new shoes"
+    />
 
     <FormSelect
       name="currency"
@@ -138,77 +126,48 @@ onMounted(async () => {
       :isLoading="currencyData.isLoading"
     />
 
-    <FormField v-slot="{ componentField }" name="amount">
-      <FormItem>
-        <FormLabel>Amount</FormLabel>
-        <FormControl>
-          <Input
-            v-bind="componentField"
-            step="0.01"
-            type="number"
-            placeholder="0.00"
-            class="w-full"
-          />
-        </FormControl>
-      </FormItem>
-    </FormField>
+    <FormInput
+      name="amount"
+      label="Amount"
+      :required="true"
+      :type="InputType.Number"
+      placeholder="0.00"
+      step="0.01"
+    />
 
-    <FormField v-slot="{ componentField }" name="installments">
-      <FormItem>
-        <FormLabel>Installments</FormLabel>
-        <FormControl>
-          <Input
-            v-bind="componentField"
-            step="1"
-            type="number"
-            placeholder="0"
-            class="w-full"
-          />
-        </FormControl>
-      </FormItem>
-    </FormField>
+    <FormInput
+      name="installments"
+      label="Installments"
+      :required="true"
+      :type="InputType.Number"
+      placeholder="0"
+      step="1"
+    />
 
-    <FormField v-slot="{ componentField }" name="interest">
-      <FormItem>
-        <FormLabel>Interest Rate (%)</FormLabel>
-        <FormControl>
-          <Input
-            v-bind="componentField"
-            step="0.01"
-            type="number"
-            placeholder="0.00"
-            class="w-full"
-            min="0"
-            max="100"
-          />
-        </FormControl>
-      </FormItem>
-    </FormField>
+    <FormInput
+      name="interest"
+      label="Interest Rate (%)"
+      :required="false"
+      :type="InputType.Number"
+      placeholder="0.00"
+      step="0.01"
+    />
 
-    <FormField v-slot="{ componentField }" name="fees">
-      <FormItem>
-        <FormLabel>Transaction Fees</FormLabel>
-        <FormControl>
-          <Input
-            v-bind="componentField"
-            step="0.01"
-            type="number"
-            placeholder="0.00"
-            class="w-full"
-            min="0"
-          />
-        </FormControl>
-      </FormItem>
-    </FormField>
+    <FormInput
+      name="fees"
+      label="Transaction Fees"
+      :required="false"
+      :type="InputType.Number"
+      placeholder="0.00"
+      step="0.01"
+    />
 
-    <FormField v-slot="{ componentField }" name="startDate">
-      <FormItem>
-        <FormLabel>Installments Start Date</FormLabel>
-        <FormControl>
-          <Input v-bind="componentField" type="date" class="w-full" />
-        </FormControl>
-      </FormItem>
-    </FormField>
+    <FormInput
+      name="startDate"
+      label="Installemnts Start Date"
+      :required="false"
+      :type="InputType.Date"
+    />
 
     <Button variant="default" type="submit" class="w-full"> Submit </Button>
   </form>

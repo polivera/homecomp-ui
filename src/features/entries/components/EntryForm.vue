@@ -16,16 +16,25 @@ import { useCategories } from "@/composable/categories";
 import { type IEntryForm, useEntries } from "@/composable/entries";
 import { useToast } from "@/components/ui/toast";
 import { Spinner } from "@/components/ui/spinner";
-import { useHousehold } from "@/composable/useHousehold.ts";
+import { useHousehold } from "@/composable/household";
 import FormSelect from "@/components/custom_ui/FormSelect/FormSelect.vue";
 import type { SelectOption } from "@/components/custom_ui/FormSelect";
 import type { IAccount } from "@/composable/accounts";
 
 const { accountFetch, fetch: fetchAccounts } = useAccounts();
-const { categoryFetch, fetchCategories } = useCategories();
+const { fetchedData: categories, fetch: fetchCategories } = useCategories();
 const { entryStore, storeEntry } = useEntries();
-const { fetchHouseholds, householdFetch } = useHousehold();
+const { fetch: fetchHouseholds, fetchedData: householdFetch } = useHousehold();
 const { toast } = useToast();
+
+const householdOptions = computed<SelectOption[]>(() => {
+  let data: SelectOption[] = householdFetch.value.households.map((it) => ({
+    value: it.id,
+    label: it.name,
+  }));
+  data = [{ value: null, label: "Select a household (optional)" }, ...data];
+  return data;
+});
 
 // Form definition
 const formSchema = toTypedSchema(
@@ -42,14 +51,12 @@ const formSchema = toTypedSchema(
           accountFetch.value.accounts.some((account) => account.id === value),
         {},
       ),
-    household: z.number().optional(),
+    household: z.number().optional().nullable(),
     category: z
       .number()
       .refine(
         (value) =>
-          categoryFetch.value.categories.some(
-            (category) => category.id === value,
-          ),
+          categories.value.categories.some((category) => category.id === value),
         {},
       ),
   }),
@@ -94,7 +101,7 @@ const formSubmit = form.handleSubmit(async (values) => {
       account:
         accountFetch.value.accounts.find((account) => account.default)?.id ||
         accountFetch.value.accounts[0]?.id,
-      category: categoryFetch.value.categories.find(
+      category: categories.value.categories.find(
         (category) => category.name === "Uncategorized",
       )?.id,
       description: "",
@@ -122,7 +129,7 @@ const getCategories = async () => {
   await fetchCategories();
   form.setFieldValue(
     "category",
-    categoryFetch.value.categories.find(
+    categories.value.categories.find(
       (category) => category.name === "Uncategorized",
     )?.id,
   );
@@ -130,7 +137,12 @@ const getCategories = async () => {
 
 // The fetch should be called on mount
 onMounted(async () => {
-  await Promise.all([getAccounts(), getCategories(), fetchHouseholds()]);
+  await Promise.all([
+    getAccounts(),
+    getCategories(),
+    fetchHouseholds(),
+    getCategories(),
+  ]);
 });
 
 const entryTypes = [
@@ -143,7 +155,7 @@ const buildAccountName = (account: IAccount): string => {
 };
 
 const categoryOptions = computed<SelectOption[]>(() =>
-  categoryFetch.value.categories.map((cat) => ({
+  categories.value.categories.map((cat) => ({
     value: cat.id,
     label: cat.name,
   })),
@@ -192,8 +204,8 @@ const accountOptions = computed<SelectOption[]>(() =>
       label="Category"
       placeholder=""
       :items="categoryOptions"
-      :isLoading="categoryFetch.isLoading"
-      :error="categoryFetch.error"
+      :isLoading="categories.isLoading"
+      :error="categories.error"
       class="mt-4"
     />
 
@@ -201,12 +213,7 @@ const accountOptions = computed<SelectOption[]>(() =>
       name="household"
       label="Household"
       placeholder="Select a household (optional)"
-      :items="
-        householdFetch.households.map((it) => ({
-          value: it.id,
-          label: it.name,
-        }))
-      "
+      :items="householdOptions"
       :isLoading="householdFetch.isLoading"
       :error="householdFetch.error"
       class="mt-4"
@@ -239,13 +246,11 @@ const accountOptions = computed<SelectOption[]>(() =>
       variant="default"
       type="submit"
       class="mt-4"
-      :disabled="categoryFetch.isLoading || accountFetch.isLoading"
+      :disabled="categories.isLoading || accountFetch.isLoading"
     >
       <Spinner
         v-if="
-          categoryFetch.isLoading ||
-          accountFetch.isLoading ||
-          entryStore.isLoading
+          categories.isLoading || accountFetch.isLoading || entryStore.isLoading
         "
       />
       <span v-else>Submit</span>

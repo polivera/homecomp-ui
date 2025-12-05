@@ -1,14 +1,17 @@
 import { computed, ref, type Ref } from "vue";
-import { fetchCategories, type ICategoryFetch } from "./fetch";
+import { fetchCategories } from "./fetch";
+import { storeCategory as storeCategoryAPI } from "./store";
+import type { ICategoryFetch, ICategoryForm, ICategoryStore } from "./types";
 
-const fetch = async (categoryFetch: Ref<ICategoryFetch>) => {
-    categoryFetch.value.isLoading = true
+const fetchCategoriesData = async (categoryFetch: Ref<ICategoryFetch>) => {
+    categoryFetch.value.isLoading = true;
     try {
-        categoryFetch.value.categories = await fetchCategories()
+        const categories = await fetchCategories();
+        categoryFetch.value.categories = categories;
     } catch (fetchError) {
-        categoryFetch.value.error = 'Failed to fetch categories'
+        categoryFetch.value.error = 'Failed to fetch categories';
     } finally {
-        categoryFetch.value.isLoading = false
+        categoryFetch.value.isLoading = false;
     }
 }
 
@@ -17,10 +20,17 @@ export const useCategories = () => {
         isLoading: false,
         categories: [],
         error: null
-    })
+    });
+
+    const categoryStore = ref<ICategoryStore>({
+        isLoading: false,
+        error: null
+    });
 
     return {
-        categoryFetch: computed(() => categoryFetch.value),
-        fetchCategories: () => fetch(categoryFetch),
+        fetchedData: computed(() => categoryFetch.value),
+        storedData: computed(() => categoryStore.value),
+        fetch: () => fetchCategoriesData(categoryFetch),
+        store: (data: ICategoryForm) => storeCategoryAPI(categoryStore, data)
     };
 }

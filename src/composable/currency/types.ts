@@ -9,6 +9,7 @@ export enum ECurrency {
 export interface IUseCurrency {
     fetchData: ComputedRef<ICurrencyFetch>;
     formatMoney(amount: number, isoCurrency: string): string;
+    getDefaultCurrency(): string;
     fetch(): Promise<void>;
 }
 

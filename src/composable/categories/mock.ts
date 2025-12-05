@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker/locale/en";
-import type { ICategory } from "./fetch";
+import type { ICategory } from "./types";
 
 
 export function generateCategories(resultCount: number): ICategory[] {

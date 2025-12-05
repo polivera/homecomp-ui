@@ -1,31 +1,44 @@
 <script setup lang="ts">
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Spinner } from "@/components/ui/spinner"
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
 
 export interface SelectOption {
-  value: string | number
-  label: string
-  disabled?: boolean
+  value: string | number | null;
+  label: string;
+  disabled?: boolean;
 }
 
 interface FormSelectProps {
-  name: string
-  label: string
-  placeholder: string
-  items: SelectOption[]
-  isLoading?: boolean
-  error?: string | null
-  required?: boolean
-  class?: string
+  name: string;
+  label: string;
+  placeholder: string;
+  items: SelectOption[];
+  isLoading?: boolean;
+  error?: string | null;
+  required?: boolean;
+  class?: string;
 }
 
 const props = withDefaults(defineProps<FormSelectProps>(), {
   isLoading: false,
   error: null,
   required: false,
-  class: 'mt-4'
-})
+  class: "mt-4",
+});
 </script>
 
 <template>

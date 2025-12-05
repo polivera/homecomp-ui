@@ -15,7 +15,7 @@ import { useCategories } from "@/composable/categories";
 import { type IReminderForm, useReminders } from "@/composable/reminders";
 import { useToast } from "@/components/ui/toast";
 import { Spinner } from "@/components/ui/spinner";
-import { useHousehold } from "@/composable/useHousehold.ts";
+import { useHousehold } from "@/composable/household";
 import {
   FormSelect,
   type SelectOption,
@@ -24,10 +24,14 @@ import { useDate } from "@/composable/useDate";
 import { useReminderInterval } from "@/composable/useReminderInterval";
 import { useCurrency } from "@/composable/currency";
 
-const { categoryFetch, fetchCategories } = useCategories();
+const { fetchedData: categoryFetch, fetch: fetchCategories } = useCategories();
 const { storedData: reminderStore, store: storeReminder } = useReminders();
-const { fetchHouseholds, householdFetch } = useHousehold();
-const { fetchData: currencyData, fetch: currencyFetch } = useCurrency();
+const { fetch: fetchHouseholds, fetchedData: householdFetch } = useHousehold();
+const {
+  fetchData: currencyData,
+  fetch: currencyFetch,
+  getDefaultCurrency,
+} = useCurrency();
 const { getFirstDayOfNextMonthString } = useDate();
 const { toast } = useToast();
 const { getIntervals } = useReminderInterval();
@@ -54,12 +58,14 @@ const categoryOptions = computed<SelectOption[]>(() =>
 );
 
 // Household options
-const householdOptions = computed<SelectOption[]>(() =>
-  householdFetch.value.households.map((household) => ({
-    value: household.id,
-    label: household.name,
-  })),
-);
+const householdOptions = computed<SelectOption[]>(() => {
+  let data: SelectOption[] = householdFetch.value.households.map((it) => ({
+    value: it.id,
+    label: it.name,
+  }));
+  data = [{ value: null, label: "Select a household (optional)" }, ...data];
+  return data;
+});
 
 // Form definition
 const formSchema = toTypedSchema(
@@ -81,18 +87,7 @@ const formSchema = toTypedSchema(
             ),
           { message: "Please select a valid category" },
         ),
-      household: z
-        .number()
-        .nullish()
-        .refine(
-          (value) =>
-            value === null ||
-            value === undefined ||
-            householdFetch.value.households.some(
-              (household) => household.id === value,
-            ),
-          { message: "Please select a valid household" },
-        ),
+      household: z.number().optional().nullish(),
     })
     .refine(
       (data) => {

@@ -25,6 +25,7 @@ export const useCurrency = (): IUseCurrency => {
     return {
         fetchData: computed(() => ccFetch.value),
         formatMoney,
+        getDefaultCurrency: (): string => ECurrency.EUR.valueOf(),
         fetch: () => fetch(ccFetch),
     }
 }

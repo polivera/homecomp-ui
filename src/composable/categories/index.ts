@@ -1,1 +1,2 @@
-export { useCategories } from "@/composable/categories/useCategories.ts";
+export { useCategories } from "./useCategories";
+export type { ICategory, ICategoryForm } from "./types";
