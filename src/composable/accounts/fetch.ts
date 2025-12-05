@@ -15,7 +15,9 @@ export const fetchAccountsWithCurrency = async (currency: string): Promise<IAcco
         setTimeout(resolve, 205);
     })
 
-    return generateAccounts(3).map((it) => {
+    const accounts = await generateAccounts(3);
+
+    return accounts.map((it) => {
         it.currency = currency
         return it
     })

@@ -1,6 +1,5 @@
 /** */
 <script setup lang="ts">
-import { useCurrency } from "@/composable/useCurrency";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -13,6 +12,7 @@ import { onMounted } from "vue";
 import { useReminders } from "@/composable/reminders";
 import { useReminderInterval } from "@/composable/useReminderInterval";
 import ReminderPayForm from "./ReminderPayForm.vue";
+import { useCurrency } from "@/composable/currency";
 
 const props = defineProps<{
   reminderID: string;

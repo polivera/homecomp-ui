@@ -21,25 +21,29 @@ import {
   type SelectOption,
 } from "@/components/custom_ui/FormSelect";
 import { useDate } from "@/composable/useDate";
-import { useCurrency } from "@/composable/useCurrency";
 import { useReminderInterval } from "@/composable/useReminderInterval";
+import { useCurrency } from "@/composable/currency";
 
 const { categoryFetch, fetchCategories } = useCategories();
 const { storedData: reminderStore, store: storeReminder } = useReminders();
 const { fetchHouseholds, householdFetch } = useHousehold();
-const { getCurrencyOptions, getDefaultCurrency } = useCurrency();
+const { fetchData: currencyData, fetch: currencyFetch } = useCurrency();
 const { getFirstDayOfNextMonthString } = useDate();
 const { toast } = useToast();
 const { getIntervals } = useReminderInterval();
-
-// Currency options
-const currencyOptions = getCurrencyOptions();
 
 // Lapse options (days between reminders)
 const lapseOptions: SelectOption[] = getIntervals().map((it) => ({
   value: it.key,
   label: it.description,
 }));
+
+const currencyOptions = computed<SelectOption[]>(() =>
+  currencyData.value.currencies.map((it) => ({
+    value: it.valueOf(),
+    label: it,
+  })),
+);
 
 // Category options
 const categoryOptions = computed<SelectOption[]>(() =>
@@ -180,7 +184,7 @@ const getHouseholds = async () => {
 
 // Fetch data on mount
 onMounted(async () => {
-  await Promise.all([getCategories(), getHouseholds()]);
+  await Promise.all([getCategories(), getHouseholds(), currencyFetch()]);
 });
 </script>
 

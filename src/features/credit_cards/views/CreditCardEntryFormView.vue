@@ -10,7 +10,7 @@ import { ArrowLeftIcon } from "lucide-vue-next";
       Credit Card Entry Form - Add
     </h1>
     <Button variant="outline" asChild>
-      <RouterLink to="/reminder/list">
+      <RouterLink to="/credit-card-entry/list">
         <ArrowLeftIcon />
         <span>Back</span>
       </RouterLink>

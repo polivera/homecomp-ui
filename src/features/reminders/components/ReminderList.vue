@@ -8,12 +8,12 @@ import {
   TableCell,
   TableRow,
 } from "@/components/ui/table";
-import { useCurrency } from "@/composable/useCurrency.ts";
 import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useDate } from "@/composable/useDate";
 import { RouterLink } from "vue-router";
+import { useCurrency } from "@/composable/currency";
 
 const props = defineProps<{
   year: number;

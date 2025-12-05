@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
@@ -13,22 +14,39 @@ import { Input } from "@/components/ui/input";
 import { onMounted } from "vue";
 import FormSelect from "@/components/custom_ui/FormSelect/FormSelect.vue";
 import type { SelectOption } from "@/components/custom_ui/FormSelect";
+import { useDate } from "@/composable/useDate";
+import { useCreditCards } from "@/composable/creditcards/useCreditCard";
+import { useCurrency } from "@/composable/currency";
 
-// TODO: Credit card needs currency
+const { getFirstDayOfNextMonthString } = useDate();
+const { fetchedData: ccData, fetch: ccFetch } = useCreditCards();
+const { fetch: currencyFetch, fetchData: currencyData } = useCurrency();
 
-// Mock credit cards data
-const mockCreditCards: SelectOption[] = [
-  { value: 1, label: "Visa **** 1234" },
-  { value: 2, label: "Mastercard **** 5678" },
-  { value: 3, label: "Amex **** 9012" },
-];
+// TODO: Make currency not enum?
+// TODO: Change remining date
+
+// Fill credit cards data dropdown
+const creditCards = computed<SelectOption[]>(() =>
+  ccData.value.cards.map((it) => ({
+    value: it.id,
+    label: it.name,
+  })),
+);
+
+const currencies = computed<SelectOption[]>(() =>
+  currencyData.value.currencies.map((it) => ({
+    value: it.valueOf() as string,
+    label: it,
+  })),
+);
 
 // Form schema
 const formSchema = toTypedSchema(
   z.object({
-    creditCard: z.number().positive("Please select a credit card"),
+    creditCard: z.string(),
     description: z.string().min(1, "Description is required"),
     amount: z.number().positive("Amount must be positive").multipleOf(0.01),
+    currency: z.string(),
     installments: z
       .number()
       .positive("Must be a positive number")
@@ -46,7 +64,7 @@ const formSchema = toTypedSchema(
 const form = useForm({
   validationSchema: formSchema,
   initialValues: {
-    startDate: new Date().toISOString().split("T")[0],
+    startDate: getFirstDayOfNextMonthString(),
     interest: 0,
     fees: 0,
   },
@@ -58,6 +76,7 @@ const formSubmit = form.handleSubmit(async (values) => {
     creditCard: values.creditCard,
     description: values.description,
     amount: values.amount,
+    currency: values.currency,
     installments: values.installments,
     interest: values.interest,
     fees: values.fees,
@@ -72,17 +91,16 @@ const formSubmit = form.handleSubmit(async (values) => {
       creditCard: undefined,
       description: "",
       amount: undefined,
+      currency: currencyData.value.currencies[0].valueOf() ?? undefined,
       installments: undefined,
       fees: undefined,
     },
   });
 });
 
-onMounted(() => {
+onMounted(async () => {
   // Set default credit card if available
-  if (mockCreditCards.length > 0) {
-    form.setFieldValue("creditCard", mockCreditCards[0].value as number);
-  }
+  await Promise.all([ccFetch(), currencyFetch()]);
 });
 </script>
 
@@ -92,8 +110,9 @@ onMounted(() => {
       name="creditCard"
       label="Credit Card"
       placeholder="Select a credit card"
-      :items="mockCreditCards"
+      :items="creditCards"
       class="w-full"
+      :isLoading="ccData.isLoading"
     />
 
     <FormField v-slot="{ componentField }" name="description">
@@ -109,6 +128,15 @@ onMounted(() => {
         </FormControl>
       </FormItem>
     </FormField>
+
+    <FormSelect
+      name="currency"
+      label="Currency"
+      placeholder="Select a currency"
+      :items="currencies"
+      class="w-full"
+      :isLoading="currencyData.isLoading"
+    />
 
     <FormField v-slot="{ componentField }" name="amount">
       <FormItem>

@@ -1,12 +1,13 @@
 import { faker } from "@faker-js/faker/locale/en";
 import type { IAccount } from "./types";
-import { useCurrency } from "../useCurrency";
+import { useCurrency } from "../currency";
 
-const { getCurrencies } = useCurrency();
+const { fetch: currencyFetch, fetchData: currencyData } = useCurrency();
 
-export function generateAccounts(resultCount: number): IAccount[] {
+export async function generateAccounts(resultCount: number): Promise<IAccount[]> {
+    await currencyFetch();
     const accounts: IAccount[] = []
-    const currencies = getCurrencies();
+    const currencies = currencyData.value.currencies
 
     for (let i = 0; i < resultCount; i++) {
         accounts.push({
