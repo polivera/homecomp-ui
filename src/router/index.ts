@@ -56,6 +56,11 @@ const router = createRouter({
             component: CreditCardEntryListView
         },
         {
+            path: '/credit-card-entry/detail/:id([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})',
+            name: 'credit-card-entry-detail',
+            component: CreditCardEntryListView
+        },
+        {
             path: '/credit-card-entry/form',
             name: 'credit-card-entry-add',
             component: CreditCardEntryFormView

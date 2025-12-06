@@ -4,6 +4,7 @@ import type { ICreditCardEntry, ICreditCard } from "./types";
 
 export function generateCreditCardEntries(resultCount: number): ICreditCardEntry[] {
     const creditCards: ICreditCardEntry[] = [];
+    const categories = ['Rent', 'Utilities', 'Subscription', 'Insurance', 'Loan Payment', 'Salary', 'Investment', 'Bill Payment'];
 
     for (let i = 0; i < resultCount; i++) {
         const startDate = faker.date.recent({ days: 90 });
@@ -16,6 +17,7 @@ export function generateCreditCardEntries(resultCount: number): ICreditCardEntry
             id: uuidv7(),
             description: faker.commerce.productName(),
             amount: faker.number.float({ min: 100, max: 5000, fractionDigits: 2 }),
+            category: categories[faker.number.int({ min: 0, max: categories.length - 1 })],
             totalInstallments,
             currentInstallment,
             interestRate,

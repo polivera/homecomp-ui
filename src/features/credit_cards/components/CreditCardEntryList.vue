@@ -5,6 +5,7 @@ import { computed, onMounted, watch } from 'vue'
 import { Table, TableBody, TableCaption, TableCell, TableRow } from '@/components/ui/table'
 import { Spinner } from '@/components/ui/spinner'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { useDate } from '@/composable/useDate'
 import { useCurrency } from '@/composable/currency'
 import { RouterLink } from 'vue-router'
@@ -48,8 +49,7 @@ const showEntries = computed(() => ccData.value.cards && ccData.value.cards.leng
     <TableCaption v-if="!ccData.isLoading" class="mb-4"> Credit Card Entries for {{ showDateStr }}. </TableCaption>
     <TableBody>
       <TableRow v-for="entry in ccData.cards" :key="entry.id">
-        <TableCell class="p-0">
-          <!--
+        <TableCell class="p-0 font-medium">
           <RouterLink
             :to="{
               name: 'credit-card-entry-detail',
@@ -57,26 +57,24 @@ const showEntries = computed(() => ccData.value.cards && ccData.value.cards.leng
             }"
             class="block p-4 font-medium"
           >
--->
-          <div class="flex flex-col gap-1">
-            <div class="flex justify-between items-start">
-              <span class="text-sm text-gray-400"> Start: {{ formatDate(entry.startDate) }} </span>
+            <div class="flex flex-col gap-1">
+              <div class="flex justify-between items-start">
+                <span class="text-sm text-gray-400"> Start: {{ formatDate(entry.startDate) }} </span>
+                <Badge variant="outline" class="ml-1">{{ entry.category }}</Badge>
+              </div>
+              <div class="flex justify-between items-end">
+                <span class="text-left text-[1rem] sm:text-base">
+                  {{ entry.description }}
+                </span>
+                <span class="font-semibold">
+                  {{ formatMoney(entry.amount, 'USD') }}
+                </span>
+              </div>
+              <div class="text-sm text-gray-500 flex gap-4">
+                <span>Installments: {{ entry.currentInstallment }} / {{ entry.totalInstallments }}</span>
+              </div>
             </div>
-            <div class="flex justify-between items-end">
-              <span class="text-left text-[1rem] sm:text-base">
-                {{ entry.description }}
-              </span>
-              <span class="font-semibold">
-                {{ formatMoney(entry.amount, 'USD') }}
-              </span>
-            </div>
-            <div class="text-sm text-gray-500 flex gap-4">
-              <span>Installments: {{ entry.currentInstallment }} / {{ entry.totalInstallments }}</span>
-              <span>{{ entry.interestRate }}% interest</span>
-              <span v-if="entry.fees > 0">Fees: {{ formatMoney(entry.fees, 'USD') }}</span>
-            </div>
-          </div>
-          <!-- </RouterLink> -->
+          </RouterLink>
         </TableCell>
       </TableRow>
     </TableBody>

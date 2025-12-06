@@ -23,7 +23,7 @@ export async function generateAccounts(resultCount: number): Promise<IAccountLis
     return accounts
 }
 
-export function generateAccountDetails(): Promise<IAccountItem> {
+export async function generateAccountDetails(): Promise<IAccountItem> {
     await currencyFetch();
     const currencies = currencyData.value.currencies
 
