@@ -1,12 +1,12 @@
 import { faker } from "@faker-js/faker/locale/en";
-import type { IAccount } from "./types";
+import type { IAccountItem, IAccountListItem } from "./types";
 import { useCurrency } from "../currency";
 
 const { fetch: currencyFetch, fetchData: currencyData } = useCurrency();
 
-export async function generateAccounts(resultCount: number): Promise<IAccount[]> {
+export async function generateAccounts(resultCount: number): Promise<IAccountListItem[]> {
     await currencyFetch();
-    const accounts: IAccount[] = []
+    const accounts: IAccountListItem[] = []
     const currencies = currencyData.value.currencies
 
     for (let i = 0; i < resultCount; i++) {
@@ -21,4 +21,18 @@ export async function generateAccounts(resultCount: number): Promise<IAccount[]>
     }
 
     return accounts
+}
+
+export function generateAccountDetails(): Promise<IAccountItem> {
+    await currencyFetch();
+    const currencies = currencyData.value.currencies
+
+    return {
+        id: faker.number.int(),
+        name: faker.company.name(),
+        currency: currencies[faker.number.int({ min: 0, max: (currencies.length - 1) })],
+        balance: parseFloat(faker.commerce.price()),
+        default: false,
+        owner: faker.person.fullName()
+    }
 }

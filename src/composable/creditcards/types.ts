@@ -2,7 +2,8 @@ export interface ICreditCardEntry {
     id: string;
     description: string;
     amount: number;
-    installments: number;
+    totalInstallments: number;
+    currentInstallment: number;
     interestRate: number;
     fees: number;
     startDate: string;

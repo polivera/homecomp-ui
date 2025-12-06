@@ -1,5 +1,5 @@
 import { computed, ref } from "vue";
-import { fetchEntries, entryDetail, fetchCards, cardDetail } from "./fetch";
+import { fetchEntries, entryDetail, fetchCards, cardDetail, resetFetchedEntries } from "./fetch";
 import { storeCreditCardEntry } from "./store";
 import {
     type ICreditCardEntryDetails,
@@ -55,7 +55,17 @@ export const useCreditCardsEntries = () => {
         fetchedData: computed(() => creditCardEntryFetch.value),
         storedData: computed(() => creditCardEntryStore.value),
         detailData: computed(() => creditCardEntryFetchDetail.value),
-        fetch: (month: number, year: number, lastID: string | null = null) => fetchEntries(creditCardEntryFetch, month, year, lastID),
+        fetch: (
+            cardId: string,
+            month: number,
+            year: number,
+        ) => fetchEntries(
+            creditCardEntryFetch,
+            cardId,
+            month,
+            year,
+        ),
+        reset: () => resetFetchedEntries(creditCardEntryFetch),
         store: (data: ICreditCardEntryForm) => storeCreditCardEntry(creditCardEntryStore, data),
         detail: (entryID: string) => entryDetail(creditCardEntryFetchDetail, entryID)
     }

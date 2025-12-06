@@ -1,16 +1,24 @@
 import type { Ref } from "vue";
 import { generateCreditCardEntries, generateCreditCards } from "./mock";
-import type { ICreditCardEntry, ICreditCard, ICreditCardEntryFetch, ICreditCardFetch, ICreditCardDetail, ICreditCardEntryDetails } from "./types";
+import type { ICreditCardEntryFetch, ICreditCardFetch, ICreditCardDetail, ICreditCardEntryDetails } from "./types";
 
+export const resetFetchedEntries = (creditCardEntryFetch: Ref<ICreditCardEntryFetch>): void => {
+    creditCardEntryFetch.value.cards = []
+}
 
-export const fetchEntries = async (creditCardEntryFetch: Ref<ICreditCardEntryFetch>, month: number, year: number, lastID: string | null = null) => {
+export const fetchEntries = async (
+    creditCardEntryFetch: Ref<ICreditCardEntryFetch>,
+    cardId: string,
+    month: number,
+    year: number,
+) => {
     creditCardEntryFetch.value.isLoading = true;
     try {
         await new Promise((resolve) => {
             setTimeout(resolve, 800);
         });
-        const newCreditCardEntries = generateCreditCardEntries(10);
 
+        const newCreditCardEntries = generateCreditCardEntries(10);
         if (newCreditCardEntries.length === 0) {
             creditCardEntryFetch.value.hasMore = false;
             return;

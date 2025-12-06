@@ -1,3 +1,13 @@
+export const SYSTEM_CATEGORIES = {
+    UNCATEGORIZED: -1,
+    CREDIT_CARD_PAYMENTS: -2
+} as const;
+
+export const SYSTEM_CATEGORIES_NAME = {
+    [SYSTEM_CATEGORIES.UNCATEGORIZED]: 'Uncategorized',
+    [SYSTEM_CATEGORIES.CREDIT_CARD_PAYMENTS]: 'Credit Card Payment'
+} as const;
+
 export interface ICategory {
     id: number;
     name: string;

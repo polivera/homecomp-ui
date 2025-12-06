@@ -1,10 +1,10 @@
 import { computed, ref } from "vue";
-import type { IAccountFetch, IAccountForm, IAccountStore, IUseAccount } from "./types";
-import { fetch, fetchWithCurrency } from "./fetch";
+import type { IAccountList, IAccountForm, IAccountStore, IUseAccount, IAccountDetail } from "./types";
+import { fetch, fetchById, fetchWithCurrency } from "./fetch";
 import { saveAccount } from "./store";
 
 export const useAccounts = (): IUseAccount => {
-    const accountFetch = ref<IAccountFetch>({
+    const accountFetch = ref<IAccountList>({
         isLoading: false,
         error: null,
         accounts: []
@@ -13,11 +13,18 @@ export const useAccounts = (): IUseAccount => {
         isLoading: false,
         error: null
     })
+    const accountDetail = ref<IAccountDetail>({
+        isLoading: false,
+        error: null,
+        account: null
+    })
+
     return {
         accountFetch: computed(() => accountFetch.value),
         accountStore: computed(() => accountStore.value),
         fetch: () => fetch(accountFetch),
         fetchWithCurrency: (currency: string) => fetchWithCurrency(accountFetch, currency),
-        store: (account: IAccountForm) => saveAccount(accountStore, account)
+        store: (account: IAccountForm) => saveAccount(accountStore, account),
+        fetchDetails: (accountId: number) => fetchById(accountDetail, accountId)
     };
 }

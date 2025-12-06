@@ -7,7 +7,8 @@ export function generateCreditCardEntries(resultCount: number): ICreditCardEntry
 
     for (let i = 0; i < resultCount; i++) {
         const startDate = faker.date.recent({ days: 90 });
-        const installments = faker.helpers.arrayElement([3, 6, 12, 18, 24, 36]);
+        const totalInstallments = faker.helpers.arrayElement([3, 6, 12, 18, 24, 36]);
+        const currentInstallment = faker.number.int({ min: 1, max: totalInstallments })
         const interestRate = faker.number.float({ min: 0, max: 25, fractionDigits: 2 });
         const fees = faker.number.float({ min: 0, max: 50, fractionDigits: 2 });
 
@@ -15,7 +16,8 @@ export function generateCreditCardEntries(resultCount: number): ICreditCardEntry
             id: uuidv7(),
             description: faker.commerce.productName(),
             amount: faker.number.float({ min: 100, max: 5000, fractionDigits: 2 }),
-            installments,
+            totalInstallments,
+            currentInstallment,
             interestRate,
             fees,
             startDate: startDate.toISOString(),
