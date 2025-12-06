@@ -23,7 +23,9 @@ export interface ICreditCardEntryDetails {
 
 export interface ICreditCardEntryForm {
     id: string | null;
+    cardId: string;
     description: string;
+    category: number;
     amount: number;
     installments: number;
     interestRate: number;

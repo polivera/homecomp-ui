@@ -68,7 +68,7 @@ const props = withDefaults(defineProps<FormSelectProps>(), {
             <SelectGroup>
               <SelectItem
                 v-for="item in props.items"
-                :key="item.value"
+                :key="item.value || item.label"
                 :value="item.value"
                 :disabled="item.disabled"
               >

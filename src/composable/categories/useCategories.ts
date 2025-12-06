@@ -30,6 +30,7 @@ export const useCategories = () => {
     return {
         fetchedData: computed(() => categoryFetch.value),
         storedData: computed(() => categoryStore.value),
+        getDefaultCategory: () => categoryFetch.value.categories.find((it) => it.name === "Uncategorized"),
         fetch: () => fetchCategoriesData(categoryFetch),
         store: (data: ICategoryForm) => storeCategoryAPI(categoryStore, data)
     };

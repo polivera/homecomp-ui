@@ -1,36 +1,75 @@
+import type { Ref } from "vue";
 import { generateCreditCardEntries, generateCreditCards } from "./mock";
-import type { ICreditCardEntry, ICreditCard } from "./types";
+import type { ICreditCardEntry, ICreditCard, ICreditCardEntryFetch, ICreditCardFetch, ICreditCardDetail, ICreditCardEntryDetails } from "./types";
 
-export const fetchCreditCardEntries = async (month: number, year: number, lastID: string | null): Promise<ICreditCardEntry[]> => {
-    console.log(`Fetching credit card entries for ${month} ${year} - starting from ${lastID}`);
-    await new Promise((resolve) => {
-        setTimeout(resolve, 800);
-    });
-    return generateCreditCardEntries(10);
+
+export const fetchEntries = async (creditCardEntryFetch: Ref<ICreditCardEntryFetch>, month: number, year: number, lastID: string | null = null) => {
+    creditCardEntryFetch.value.isLoading = true;
+    try {
+        await new Promise((resolve) => {
+            setTimeout(resolve, 800);
+        });
+        const newCreditCardEntries = generateCreditCardEntries(10);
+
+        if (newCreditCardEntries.length === 0) {
+            creditCardEntryFetch.value.hasMore = false;
+            return;
+        }
+
+        creditCardEntryFetch.value.cards = [...creditCardEntryFetch.value.cards, ...newCreditCardEntries];
+        creditCardEntryFetch.value.hasMore = true;
+    } catch (fetchError) {
+        creditCardEntryFetch.value.error = 'Failed to fetch credit card entries';
+    } finally {
+        creditCardEntryFetch.value.isLoading = false;
+    }
 }
 
-export const fetchCreditCardEntryDetails = async (entryID: string): Promise<ICreditCardEntry> => {
-    console.log(`Fetching details for credit card entry: ${entryID}`);
-    await new Promise((resolve) => {
-        setTimeout(resolve, 100);
-    });
-    const entries = generateCreditCardEntries(1);
-    return entries[0];
+
+export const fetchCards = async (creditCardFetch: Ref<ICreditCardFetch>) => {
+    creditCardFetch.value.isLoading = true;
+    try {
+        await new Promise((resolve) => {
+            setTimeout(resolve, 500);
+        });
+
+        creditCardFetch.value.cards = generateCreditCards(5);
+    } catch (fetchError) {
+        creditCardFetch.value.error = 'Failed to fetch credit cards';
+    } finally {
+        creditCardFetch.value.isLoading = false;
+    }
 }
 
-export const fetchCreditCards = async (): Promise<ICreditCard[]> => {
-    console.log('Fetching credit cards');
-    await new Promise((resolve) => {
-        setTimeout(resolve, 500);
-    });
-    return generateCreditCards(5);
+
+export const entryDetail = async (creditCardEntryDetail: Ref<ICreditCardEntryDetails>, entryID: string) => {
+    creditCardEntryDetail.value.isLoading = true;
+    try {
+        await new Promise((resolve) => {
+            setTimeout(resolve, 100);
+        });
+        const detail = generateCreditCardEntries(1)[0];
+        if (detail !== null) {
+            creditCardEntryDetail.value.data = detail;
+        }
+    } catch (fetchError) {
+        creditCardEntryDetail.value.error = 'Failed to fetch credit card entry with ID: ' + entryID;
+    } finally {
+        creditCardEntryDetail.value.isLoading = false;
+    }
 }
 
-export const fetchCreditCardDetails = async (cardID: string): Promise<ICreditCard> => {
-    console.log(`Fetching details for credit card: ${cardID}`);
-    await new Promise((resolve) => {
-        setTimeout(resolve, 100);
-    });
-    const cards = generateCreditCards(1);
-    return cards[0];
+
+export const cardDetail = async (creditCardDetail: Ref<ICreditCardDetail>, cardID: string) => {
+    creditCardDetail.value.isLoading = true;
+    try {
+        const detail = generateCreditCards(1)[0];
+        if (detail !== null) {
+            creditCardDetail.value.data = detail;
+        }
+    } catch (fetchError) {
+        creditCardDetail.value.error = 'Failed to fetch credit card with ID: ' + cardID;
+    } finally {
+        creditCardDetail.value.isLoading = false;
+    }
 }

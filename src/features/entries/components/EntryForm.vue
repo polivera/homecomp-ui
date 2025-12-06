@@ -94,6 +94,10 @@ const formSubmit = form.handleSubmit(async (values) => {
 
   await storeEntry(newEntry);
 
+  toast({
+    description: "Your entry has been added successfully.",
+  });
+
   form.resetForm({
     values: {
       entryType: "expense",

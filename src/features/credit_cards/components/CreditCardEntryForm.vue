@@ -8,15 +8,25 @@ import { onMounted } from "vue";
 import FormSelect from "@/components/custom_ui/FormSelect/FormSelect.vue";
 import type { SelectOption } from "@/components/custom_ui/FormSelect";
 import { useDate } from "@/composable/useDate";
-import { useCreditCards } from "@/composable/creditcards/useCreditCard";
+import {
+  useCreditCards,
+  useCreditCardsEntries,
+} from "@/composable/creditcards/useCreditCard";
 import { useCurrency } from "@/composable/currency";
 import { FormInput, InputType } from "@/components/custom_ui/FormInput";
 import { useCategories } from "@/composable/categories";
+import { toast } from "@/components/ui/toast";
 
 const { getFirstDayOfNextMonthString } = useDate();
 const { fetchedData: ccData, fetch: ccFetch } = useCreditCards();
+const { store: ccStore } = useCreditCardsEntries();
 const { fetch: currencyFetch, fetchData: currencyData } = useCurrency();
-const {} = useCategories();
+
+const {
+  fetch: fetchCategories,
+  fetchedData: categoryData,
+  getDefaultCategory,
+} = useCategories();
 
 // Fill credit cards data dropdown
 const creditCards = computed<SelectOption[]>(() =>
@@ -33,6 +43,13 @@ const currencies = computed<SelectOption[]>(() =>
   })),
 );
 
+const categories = computed<SelectOption[]>(() =>
+  categoryData.value.categories.map((it) => ({
+    value: it.id,
+    label: it.name,
+  })),
+);
+
 // Form schema
 const formSchema = toTypedSchema(
   z.object({
@@ -40,6 +57,7 @@ const formSchema = toTypedSchema(
     description: z.string().min(1, "Description is required"),
     amount: z.number().positive("Amount must be positive").multipleOf(0.01),
     currency: z.string(),
+    category: z.number(),
     installments: z
       .number()
       .positive("Must be a positive number")
@@ -65,15 +83,20 @@ const form = useForm({
 
 // Form submission
 const formSubmit = form.handleSubmit(async (values) => {
-  console.log("Credit Card Entry Form Data:", {
-    creditCard: values.creditCard,
+  await ccStore({
+    id: null,
+    cardId: values.creditCard,
     description: values.description,
     amount: values.amount,
-    currency: values.currency,
+    category: values.category,
     installments: values.installments,
-    interest: values.interest,
+    interestRate: values.interest,
     fees: values.fees,
     startDate: values.startDate,
+  });
+
+  toast({
+    description: "Your credit card entry has been store successfuly",
   });
 
   // Reset form after submission
@@ -85,6 +108,7 @@ const formSubmit = form.handleSubmit(async (values) => {
       description: "",
       amount: undefined,
       currency: currencyData.value.currencies[0].valueOf() ?? undefined,
+      category: getDefaultCategory()?.id,
       installments: undefined,
       fees: undefined,
     },
@@ -93,7 +117,8 @@ const formSubmit = form.handleSubmit(async (values) => {
 
 onMounted(async () => {
   // Set default credit card if available
-  await Promise.all([ccFetch(), currencyFetch()]);
+  await Promise.all([ccFetch(), currencyFetch(), fetchCategories()]);
+  form.setFieldValue("category", getDefaultCategory()?.id);
 });
 </script>
 
@@ -124,6 +149,17 @@ onMounted(async () => {
       :items="currencies"
       class="w-full"
       :isLoading="currencyData.isLoading"
+      :required="true"
+    />
+
+    <FormSelect
+      name="category"
+      label="Category"
+      placeholder="Select category"
+      :items="categories"
+      :isLoading="categoryData.isLoading"
+      :error="categoryData.error"
+      :required="true"
     />
 
     <FormInput
