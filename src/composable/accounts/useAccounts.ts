@@ -1,36 +1,7 @@
-import { computed, ref, type Ref } from "vue";
-import type { IAccountFetch, IUseAccount } from "./types";
-import { fetchAccounts, fetchAccountsWithCurrency } from "./fetch";
-
-
-const fetch = async (accountFetch: Ref<IAccountFetch>): Promise<void> => {
-    accountFetch.value.isLoading = true
-    try {
-        await new Promise((resolve) => {
-            setTimeout(resolve, 1000)
-        })
-        accountFetch.value.accounts = await fetchAccounts()
-    } catch (fetchError) {
-        accountFetch.value.error = 'Failed to fetch accounts'
-    } finally {
-        accountFetch.value.isLoading = false
-    }
-}
-
-
-const fetchWithCurrency = async (accountFetch: Ref<IAccountFetch>, currency: string): Promise<void> => {
-    accountFetch.value.isLoading = true
-    try {
-        await new Promise((resolve) => {
-            setTimeout(resolve, 1000)
-        })
-        accountFetch.value.accounts = await fetchAccountsWithCurrency(currency)
-    } catch (fetchError) {
-        accountFetch.value.error = 'Failed to fetch accounts'
-    } finally {
-        accountFetch.value.isLoading = false
-    }
-}
+import { computed, ref } from "vue";
+import type { IAccountFetch, IAccountForm, IAccountStore, IUseAccount } from "./types";
+import { fetch, fetchWithCurrency } from "./fetch";
+import { saveAccount } from "./store";
 
 export const useAccounts = (): IUseAccount => {
     const accountFetch = ref<IAccountFetch>({
@@ -38,9 +9,15 @@ export const useAccounts = (): IUseAccount => {
         error: null,
         accounts: []
     })
+    const accountStore = ref<IAccountStore>({
+        isLoading: false,
+        error: null
+    })
     return {
         accountFetch: computed(() => accountFetch.value),
+        accountStore: computed(() => accountStore.value),
         fetch: () => fetch(accountFetch),
-        fetchWithCurrency: (currency: string) => fetchWithCurrency(accountFetch, currency)
+        fetchWithCurrency: (currency: string) => fetchWithCurrency(accountFetch, currency),
+        store: (account: IAccountForm) => saveAccount(accountStore, account)
     };
 }
