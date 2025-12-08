@@ -28,7 +28,6 @@ const formatDate = (dateString: string): string => {
 const showDateStr = computed(() => formatDateMonthYearOnly(props.year, props.month))
 
 onMounted(async () => {
-  console.log('asdofijasodijfoasj')
   await ccFetch(props.cardId, props.month, props.year)
   console.log(ccData.value)
 })

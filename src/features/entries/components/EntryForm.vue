@@ -1,40 +1,38 @@
 <script setup lang="ts">
-import { useForm } from "vee-validate";
-import { toTypedSchema } from "@vee-validate/zod";
-import * as z from "zod";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useAccounts } from "@/composable/accounts";
-import { computed, onMounted } from "vue";
-import { useCategories } from "@/composable/categories";
-import { type IEntryForm, useEntries } from "@/composable/entries";
-import { useToast } from "@/components/ui/toast";
-import { Spinner } from "@/components/ui/spinner";
-import { useHousehold } from "@/composable/household";
-import FormSelect from "@/components/custom_ui/FormSelect/FormSelect.vue";
-import type { SelectOption } from "@/components/custom_ui/FormSelect";
-import type { IAccount } from "@/composable/accounts";
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import * as z from 'zod'
+import { FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { useAccounts } from '@/composable/accounts'
+import { computed, onMounted } from 'vue'
+import { useCategories } from '@/composable/categories'
+import { type IEntryForm, useEntries } from '@/composable/entries'
+import { useToast } from '@/components/ui/toast'
+import { Spinner } from '@/components/ui/spinner'
+import { useHousehold } from '@/composable/household'
+import FormSelect from '@/components/custom_ui/FormSelect/FormSelect.vue'
+import type { SelectOption } from '@/components/custom_ui/FormSelect'
+import type { IAccount } from '@/composable/accounts'
+import { useEntryType } from '@/composable/entrytype'
 
-const { accountFetch, fetch: fetchAccounts } = useAccounts();
-const { fetchedData: categories, fetch: fetchCategories } = useCategories();
-const { entryStore, storeEntry } = useEntries();
-const { fetch: fetchHouseholds, fetchedData: householdFetch } = useHousehold();
-const { toast } = useToast();
+const { accountFetch, fetch: fetchAccounts } = useAccounts()
+const { fetchedData: categories, fetch: fetchCategories } = useCategories()
+const { entryStore, storeEntry } = useEntries()
+const { fetch: fetchHouseholds, fetchedData: householdFetch } = useHousehold()
+const { toast } = useToast()
 
 const householdOptions = computed<SelectOption[]>(() => {
-  let data: SelectOption[] = householdFetch.value.households.map((it) => ({
+  let data: SelectOption[] = householdFetch.value.households.map(it => ({
     value: it.id,
     label: it.name,
-  }));
-  data = [{ value: null, label: "Select a household (optional)" }, ...data];
-  return data;
-});
+  }))
+  data = [{ value: null, label: 'Select a household (optional)' }, ...data]
+  return data
+})
+
+const { getEntryTypeDropdown } = useEntryType()
 
 // Form definition
 const formSchema = toTypedSchema(
@@ -44,42 +42,28 @@ const formSchema = toTypedSchema(
     amount: z.number().positive().multipleOf(0.01),
     description: z.string().min(1),
     date: z.string(),
-    account: z
-      .number()
-      .refine(
-        (value) =>
-          accountFetch.value.accounts.some((account) => account.id === value),
-        {},
-      ),
+    account: z.number().refine(value => accountFetch.value.accounts.some(account => account.id === value), {}),
     household: z.number().optional().nullable(),
-    category: z
-      .number()
-      .refine(
-        (value) =>
-          categories.value.categories.some((category) => category.id === value),
-        {},
-      ),
-  }),
-);
+    category: z.number().refine(value => categories.value.categories.some(category => category.id === value), {}),
+  })
+)
 
 // Form setup
 const form = useForm({
   validationSchema: formSchema,
   initialValues: {
-    entryType: "expense", // Pre-select here
-    date: new Date().toISOString().split("T")[0],
-    account:
-      accountFetch.value.accounts.find((account) => account.default)?.id ||
-      accountFetch.value.accounts[0]?.id,
+    entryType: 'expense', // Pre-select here
+    date: new Date().toISOString().split('T')[0],
+    account: accountFetch.value.accounts.find(account => account.default)?.id || accountFetch.value.accounts[0]?.id,
   },
-});
+})
 
 // Form submission
-const formSubmit = form.handleSubmit(async (values) => {
+const formSubmit = form.handleSubmit(async values => {
   const submitData = {
     ...values,
     date: new Date(values.date).toISOString(),
-  };
+  }
 
   const newEntry: IEntryForm = {
     id: null,
@@ -90,87 +74,66 @@ const formSubmit = form.handleSubmit(async (values) => {
     description: submitData.description,
     entryType: submitData.entryType,
     household: submitData?.household || null,
-  };
+  }
 
-  await storeEntry(newEntry);
+  await storeEntry(newEntry)
 
   toast({
-    description: "Your entry has been added successfully.",
-  });
+    description: 'Your entry has been added successfully.',
+  })
 
   form.resetForm({
     values: {
-      entryType: "expense",
-      date: new Date().toISOString().split("T")[0],
-      account:
-        accountFetch.value.accounts.find((account) => account.default)?.id ||
-        accountFetch.value.accounts[0]?.id,
-      category: categories.value.categories.find(
-        (category) => category.name === "Uncategorized",
-      )?.id,
-      description: "",
+      entryType: 'expense',
+      date: new Date().toISOString().split('T')[0],
+      account: accountFetch.value.accounts.find(account => account.default)?.id || accountFetch.value.accounts[0]?.id,
+      category: categories.value.categories.find(category => category.name === 'Uncategorized')?.id,
+      description: '',
       amount: undefined,
     },
-  });
+  })
 
   toast({
-    description: "Your entry has been added successfully.",
-  });
-});
+    description: 'Your entry has been added successfully.',
+  })
+})
 
 // Retrieve accounts
 const getAccounts = async () => {
-  await fetchAccounts();
+  await fetchAccounts()
   form.setFieldValue(
-    "account",
-    accountFetch.value.accounts.find((account) => account.default)?.id ||
-      accountFetch.value.accounts[0].id,
-  );
-};
+    'account',
+    accountFetch.value.accounts.find(account => account.default)?.id || accountFetch.value.accounts[0].id
+  )
+}
 
-// Retrieve categories
 const getCategories = async () => {
-  await fetchCategories();
-  form.setFieldValue(
-    "category",
-    categories.value.categories.find(
-      (category) => category.name === "Uncategorized",
-    )?.id,
-  );
-};
+  await fetchCategories()
+  form.setFieldValue('category', categories.value.categories.find(category => category.name === 'Uncategorized')?.id)
+}
 
-// The fetch should be called on mount
 onMounted(async () => {
-  await Promise.all([
-    getAccounts(),
-    getCategories(),
-    fetchHouseholds(),
-    getCategories(),
-  ]);
-});
+  await Promise.all([getAccounts(), getCategories(), fetchHouseholds(), getCategories()])
+})
 
-const entryTypes = [
-  { value: "income", label: "Income", disabled: false },
-  { value: "expense", label: "Expense", disabled: false },
-];
-
+const entryTypes = getEntryTypeDropdown()
 const buildAccountName = (account: IAccount): string => {
-  return `${account.name} (${account.currency} ${account.balance})`;
-};
+  return `${account.name} (${account.currency} ${account.balance})`
+}
 
 const categoryOptions = computed<SelectOption[]>(() =>
-  categories.value.categories.map((cat) => ({
+  categories.value.categories.map(cat => ({
     value: cat.id,
     label: cat.name,
-  })),
-);
+  }))
+)
 
 const accountOptions = computed<SelectOption[]>(() =>
-  accountFetch.value.accounts.map((it) => ({
+  accountFetch.value.accounts.map(it => ({
     value: it.id,
     label: buildAccountName(it),
-  })),
-);
+  }))
+)
 </script>
 
 <template>
@@ -227,12 +190,7 @@ const accountOptions = computed<SelectOption[]>(() =>
       <FormItem class="mt-4">
         <FormLabel>Amount</FormLabel>
         <FormControl>
-          <Input
-            v-bind="componentField"
-            step="0.01"
-            type="number"
-            class="w-full"
-          />
+          <Input v-bind="componentField" step="0.01" type="number" class="w-full" />
         </FormControl>
       </FormItem>
     </FormField>
@@ -246,17 +204,8 @@ const accountOptions = computed<SelectOption[]>(() =>
       </FormItem>
     </FormField>
 
-    <Button
-      variant="default"
-      type="submit"
-      class="mt-4"
-      :disabled="categories.isLoading || accountFetch.isLoading"
-    >
-      <Spinner
-        v-if="
-          categories.isLoading || accountFetch.isLoading || entryStore.isLoading
-        "
-      />
+    <Button variant="default" type="submit" class="mt-4" :disabled="categories.isLoading || accountFetch.isLoading">
+      <Spinner v-if="categories.isLoading || accountFetch.isLoading || entryStore.isLoading" />
       <span v-else>Submit</span>
     </Button>
   </form>

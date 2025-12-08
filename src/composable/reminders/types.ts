@@ -37,6 +37,7 @@ export interface IReminderDetail {
 
 export interface IReminderForm {
     id: string | null;
+    entryType: string;
     amount: number;
     description: string;
     currency: string;
