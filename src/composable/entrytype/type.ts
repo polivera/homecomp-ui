@@ -6,6 +6,6 @@ export interface IEntryType {
 }
 
 export interface IUseEntryType {
-    getEntryTypes(): IEntryType[]
-    getEntryTypeDropdown(): SelectOption
+    getEntryTypes(): IEntryType[];
+    getEntryTypeDropdown(): SelectOption[];
 }
