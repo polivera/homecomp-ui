@@ -29,20 +29,27 @@ export const useDate = (locale?: string) => {
     };
 
     const getMonthName = (month: number) => {
-        const auxDate = new Date(getCurrentYear(), month, 1);
+        const auxDate = new Date(getCurrentYear(), month - 1, 1);
         return auxDate.toLocaleString(locale, { month: "long" });
     }
 
-    const formatDate = (dateToFormat: Date, monthFormat: any, yearFormat: any): string => {
+    const formatDate = (dateToFormat: Date, monthFormat: any, yearFormat: any, dayFormat: any): string => {
         monthFormat = monthFormat || "long"
         yearFormat = yearFormat || "long"
+        dayFormat = dayFormat || "undefined"
         return dateToFormat.toLocaleDateString(
             locale,
             {
+                day: dayFormat,
                 month: monthFormat,
                 year: yearFormat,
             },
         );
+    }
+
+    const formatDateString = (dateToFormat: string, monthFormat: any, yearFormat: any, dayFormat: any): string => {
+        const paramDate = new Date(dateToFormat)
+        return formatDate(paramDate, monthFormat, yearFormat, dayFormat);
     }
 
     const getFirstDayOfNextMonth = (): Date => {
@@ -74,12 +81,17 @@ export const useDate = (locale?: string) => {
     }
 
     const formatDateMonthYearOnly = (month?: number | null, year?: number | null): string => {
-        month = month || new Date().getMonth()
-        year = year || new Date().getFullYear()
-        return new Date(year, month, 1).toLocaleDateString("en-US", {
+        return customDate(year, month).toLocaleDateString(locale, {
             month: "long",
             year: "numeric",
         });
+    }
+
+    const customDate = (year?: number | null, month?: number | null, day?: number | null): Date => {
+        year = year || new Date().getMonth()
+        month = month ? month - 1 : new Date().getMonth()
+        day = day || new Date().getDay()
+        return new Date(year, month, day)
     }
 
     return {
@@ -96,5 +108,6 @@ export const useDate = (locale?: string) => {
         getLastDayOfCurrentMonth,
         getLastDayOfCurrentMonthString,
         formatDateMonthYearOnly,
+        formatDateString,
     };
 };

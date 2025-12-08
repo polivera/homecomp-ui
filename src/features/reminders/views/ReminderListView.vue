@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import Button from "@/components/ui/button/Button.vue";
-import { RouterLink } from "vue-router";
-import { MonthAndYearSelect } from "@/components/custom_ui/MonthAndYearSelect";
-import { ReminderList } from "@/features/reminders/components";
-import { ref } from "vue";
-import { PlusCircleIcon } from "lucide-vue-next";
+import Button from '@/components/ui/button/Button.vue'
+import { RouterLink } from 'vue-router'
+import { MonthAndYearSelect } from '@/components/custom_ui/MonthAndYearSelect'
+import { ReminderList } from '@/features/reminders/components'
+import { ref } from 'vue'
+import { PlusCircleIcon } from 'lucide-vue-next'
 
-const currentDate = new Date();
-const selectedMonth = ref<number>(currentDate.getMonth());
-const selectedYear = ref<number>(currentDate.getFullYear());
+const currentDate = new Date()
+const selectedMonth = ref<number>(currentDate.getMonth() + 1)
+const selectedYear = ref<number>(currentDate.getFullYear())
 </script>
 
 <template>
@@ -25,8 +25,8 @@ const selectedYear = ref<number>(currentDate.getFullYear());
     <MonthAndYearSelect
       :month="selectedMonth"
       :year="selectedYear"
-      @update:month="(month) => (selectedMonth = month)"
-      @update:year="(year) => (selectedYear = year)"
+      @update:month="month => (selectedMonth = month)"
+      @update:year="year => (selectedYear = year)"
     />
 
     <ReminderList :month="selectedMonth" :year="selectedYear" />

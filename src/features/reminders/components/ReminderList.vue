@@ -18,7 +18,7 @@ const { fetch: reminderFetchAction, fetchedData: reminderFetchData } = useRemind
 
 const { formatMoney } = useCurrency()
 const { formatDateMonthYearOnly } = useDate()
-const showDateStr = ref<string>(formatDateMonthYearOnly(props.year, props.month))
+const showDateStr = ref<string>(formatDateMonthYearOnly(props.month, props.year))
 
 // TODO: Change this for the useDate one see how to pass format
 const formatDate = (dateString: string): string => {
@@ -30,6 +30,7 @@ const formatDate = (dateString: string): string => {
 }
 
 onMounted(async () => {
+  console.log(props)
   await reminderFetchAction(props.month, props.year)
   console.log(reminderFetchData.value.reminders)
 })
@@ -80,7 +81,11 @@ const showReminders = computed(
                 <span class="text-left text-[1rem] sm:text-base">
                   {{ reminder.description }}
                 </span>
-                <span class="font-semibold">
+                <span
+                  :class="
+                    reminder.entryType === 'income' ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'
+                  "
+                >
                   {{ formatMoney(reminder.amount, reminder.currency) }}
                 </span>
               </div>

@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker/locale/en";
 import { EIntervals, type IReminder } from "./types";
 import { uuidv7 } from "uuidv7";
+import { useEntryType } from "../entrytype";
 
 
 function getRandomInt(max: number) {
@@ -12,6 +13,7 @@ export function generateReminders(resultCount: number): IReminder[] {
     const categories = ['Rent', 'Utilities', 'Subscription', 'Insurance', 'Loan Payment', 'Salary', 'Investment', 'Bill Payment'];
     const households = ['Main House', 'Vacation Home', 'Shared Apartment'];
     const lapseOptions = [7, 14, 30, 60, 90, 365]; // Days between reminders
+    const { getEntryTypes } = useEntryType();
 
     for (let i = 0; i < resultCount; i++) {
         const dateStart = faker.date.recent({ days: 30 });
@@ -21,6 +23,7 @@ export function generateReminders(resultCount: number): IReminder[] {
 
         reminders.push({
             id: uuidv7(),
+            entryType: getEntryTypes()[faker.number.int({ min: 0, max: 1 })].value,
             amount: faker.number.float({ min: 10, max: 2000, fractionDigits: 2 }),
             description: faker.commerce.productName(),
             currency: faker.helpers.arrayElement(['USD', 'EUR', 'ARS']),

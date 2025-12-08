@@ -6,6 +6,7 @@ export enum EIntervals {
 
 export interface IReminder {
     id: string;
+    entryType: string;
     description: string;
     amount: number;
     currency: string;

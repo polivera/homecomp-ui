@@ -6,6 +6,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useCurrency } from '@/composable/currency'
+import { useDate } from '@/composable/useDate'
 
 const props = defineProps<{
   accountID: number
@@ -15,6 +16,7 @@ const props = defineProps<{
 
 const { entryFetch, fetchEntries } = useEntries()
 const { formatMoney } = useCurrency()
+const { formatDateString } = useDate()
 const showDateStr = ref<string>(
   new Date(props.year, props.month - 1, 1).toLocaleDateString('en-US', {
     month: 'long',
@@ -23,12 +25,7 @@ const showDateStr = ref<string>(
 )
 
 const formatDate = (dateString: string): string => {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
+  return formatDateString(dateString, 'short', 'numeric', 'numeric')
 }
 
 const fetchMore = async () => {
