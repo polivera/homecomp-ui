@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogClose,
@@ -9,46 +9,38 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { computed, onMounted, ref } from "vue";
-import { toTypedSchema } from "@vee-validate/zod";
-import z from "zod";
-import { useForm } from "vee-validate";
-import { useAccounts } from "@/composable/accounts";
-import {
-  FormSelect,
-  type SelectOption,
-} from "@/components/custom_ui/FormSelect";
-import type { IReminderPayFormData, ReminderPayFormProps } from "./types";
-import { useDate } from "@/composable/useDate";
+} from '@/components/ui/dialog'
+import { FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { computed, onMounted, ref } from 'vue'
+import { toTypedSchema } from '@vee-validate/zod'
+import z from 'zod'
+import { useForm } from 'vee-validate'
+import { useAccounts } from '@/composable/accounts'
+import { FormSelect, type SelectOption } from '@/components/custom_ui/FormSelect'
+import type { IReminderPayFormData, ReminderPayFormProps } from './types'
+import { useDate } from '@/composable/useDate'
 
 const props = withDefaults(defineProps<ReminderPayFormProps>(), {
   defaultAmount: 0,
-});
+})
 
 const emit = defineEmits<{
-  submit: [values: IReminderPayFormData];
-}>();
+  submit: [values: IReminderPayFormData]
+}>()
 
-const { accountFetch, fetchWithCurrency: fetchAccounts } = useAccounts();
-const { getTodayISO } = useDate();
+const { accountFetch, fetchWithCurrency: fetchAccounts } = useAccounts()
+const { getTodayISO } = useDate()
 
-const dialogOpen = ref(false);
+const dialogOpen = ref(false)
 
 const formSchema = toTypedSchema(
   z.object({
     amount: z.number().positive().multipleOf(0.01),
     date: z.string(),
     account: z.number().positive(),
-  }),
-);
+  })
+)
 
 const form = useForm({
   validationSchema: formSchema,
@@ -56,23 +48,23 @@ const form = useForm({
     amount: props.defaultAmount,
     date: getTodayISO(),
   },
-});
+})
 
-const formSubmit = form.handleSubmit(async (values) => {
-  emit("submit", values);
-  dialogOpen.value = false;
-});
+const formSubmit = form.handleSubmit(async values => {
+  emit('submit', values)
+  dialogOpen.value = false
+})
 
 const accountOptions = computed<SelectOption[]>(() => {
-  return accountFetch.value.accounts.map((account) => ({
+  return accountFetch.value.accounts.map(account => ({
     value: account.id,
     label: account.name,
-  }));
-});
+  }))
+})
 
 onMounted(async () => {
-  await fetchAccounts(props.payCurrency);
-});
+  await fetchAccounts(props.payCurrency)
+})
 </script>
 
 <template>
@@ -84,9 +76,7 @@ onMounted(async () => {
       <form @submit="formSubmit">
         <DialogHeader>
           <DialogTitle>Pay Reminder</DialogTitle>
-          <DialogDescription>
-            Pay current reminder to convert it to entry
-          </DialogDescription>
+          <DialogDescription> Pay current reminder to convert it to entry </DialogDescription>
         </DialogHeader>
         <div class="grid gap-4">
           <FormField v-slot="{ componentField }" name="amount">
@@ -96,13 +86,7 @@ onMounted(async () => {
                 <span class="text-destructive">*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  v-bind="componentField"
-                  step="0.01"
-                  type="number"
-                  class="w-full"
-                  placeholder="Enter amount"
-                />
+                <Input v-bind="componentField" step="0.01" type="number" class="w-full" placeholder="Enter amount" />
               </FormControl>
             </FormItem>
           </FormField>

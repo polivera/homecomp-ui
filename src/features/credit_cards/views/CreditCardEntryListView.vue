@@ -16,7 +16,7 @@ const selectedCard = ref<string>('mycard')
 <template>
   <div class="flex justify-between items-center border-b mb-5">
     <h1 class="text-xl font-bold py-2 text-primary">Credit Card Entries List</h1>
-    <Button asChild>
+    <Button as-child>
       <RouterLink to="/credit-card-entry/form">
         <PlusCircleIcon />
         <span>Add Credit Card Entry</span>
@@ -28,5 +28,5 @@ const selectedCard = ref<string>('mycard')
     <MonthAndYearSelect v-model:month="selectedMonth" v-model:year="selectedYear" />
   </div>
 
-  <CreditCardEntryList :month="selectedMonth" v-model:year="selectedYear" v-model:cardId="selectedCard" />
+  <CreditCardEntryList v-model:year="selectedYear" v-model:card-id="selectedCard" :month="selectedMonth" />
 </template>

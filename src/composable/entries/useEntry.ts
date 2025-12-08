@@ -1,30 +1,9 @@
-import { computed, type Ref, ref } from "vue";
-import { fetchEntries, type IEntryFetch } from "@/composable/entries/fetch.ts";
+import { computed, ref } from "vue";
 import { entryStore, storeEntry } from "@/composable/entries/store.ts";
+import type { IEntryFetch } from "./types";
+import { fetch, resetFetchData } from "./fetch";
 
 
-async function fetch(
-    accountID: number,
-    month: number,
-    year: number,
-    lastID: string | null = null,
-    entryFetch: Ref<IEntryFetch>
-) {
-    entryFetch.value.isLoading = true
-    try {
-        const newEntries = await fetchEntries(accountID, month, year, lastID)
-        if (newEntries.length === 0) {
-            entryFetch.value.hasMore = false;
-            return
-        }
-        entryFetch.value.entries = [...entryFetch.value.entries, ...newEntries]
-        return
-    } catch (error) {
-        entryFetch.value.error = 'Failed to fetch entries'
-    } finally {
-        entryFetch.value.isLoading = false
-    }
-}
 
 export const useEntries = () => {
     const entryFetch = ref<IEntryFetch>({
@@ -37,8 +16,9 @@ export const useEntries = () => {
     return {
         entryStore: computed(() => entryStore.value),
         entryFetch: computed(() => entryFetch.value),
+        resetFetchData: () => resetFetchData(entryFetch),
         fetchEntries: (accountID: number, month: number, year: number, lastID: string | null = null) => fetch(
-            accountID, month, year, lastID, entryFetch
+            entryFetch, accountID, month, year
         ),
         storeEntry,
     };

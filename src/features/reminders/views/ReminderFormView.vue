@@ -6,8 +6,13 @@ import { ArrowLeftIcon } from "lucide-vue-next";
 
 <template>
   <div class="flex justify-between items-center border-b">
-    <h1 class="text-xl font-bold py-2 text-primary">Reminder Form - Add</h1>
-    <Button variant="outline" asChild>
+    <h1 class="text-xl font-bold py-2 text-primary">
+      Reminder Form - Add
+    </h1>
+    <Button
+      variant="outline"
+      as-child
+    >
       <RouterLink to="/reminder/list">
         <ArrowLeftIcon />
         <span>Back</span>

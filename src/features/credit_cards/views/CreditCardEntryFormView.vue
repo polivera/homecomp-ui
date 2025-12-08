@@ -9,7 +9,10 @@ import { ArrowLeftIcon } from "lucide-vue-next";
     <h1 class="text-xl font-bold py-2 text-primary">
       Credit Card Entry Form - Add
     </h1>
-    <Button variant="outline" asChild>
+    <Button
+      variant="outline"
+      as-child
+    >
       <RouterLink to="/credit-card-entry/list">
         <ArrowLeftIcon />
         <span>Back</span>

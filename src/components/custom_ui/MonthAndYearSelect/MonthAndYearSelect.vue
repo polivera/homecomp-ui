@@ -65,7 +65,6 @@ watch(
 watch(
   () => selectedMonth.value,
   newMonth => {
-    console.log(newMonth.value)
     emit('update:month', newMonth.value)
   },
   { deep: true }

@@ -14,15 +14,11 @@ const props = defineProps<{
   month: number
 }>()
 
-const { entryFetch, fetchEntries } = useEntries()
+const { entryFetch, fetchEntries, resetFetchData } = useEntries()
 const { formatMoney } = useCurrency()
-const { formatDateString } = useDate()
-const showDateStr = ref<string>(
-  new Date(props.year, props.month - 1, 1).toLocaleDateString('en-US', {
-    month: 'long',
-    year: 'numeric',
-  })
-)
+const { formatDateMonthYearOnly, formatDateString } = useDate()
+
+const showDateStr = ref<string>(formatDateMonthYearOnly(props.month, props.year))
 
 const formatDate = (dateString: string): string => {
   return formatDateString(dateString, 'short', 'numeric', 'numeric')
@@ -44,13 +40,9 @@ onMounted(async () => {
 watch(
   () => [props.accountID, props.month, props.year],
   async () => {
+    resetFetchData()
     // Note: does work, but I don't like it
-    entryFetch.value.entries = []
-    showDateStr.value = new Date(props.year, props.month - 1, 1).toLocaleDateString('en-US', {
-      month: 'long',
-      year: 'numeric',
-    })
-
+    showDateStr.value = formatDateMonthYearOnly(props.month, props.year)
     await fetchEntries(props.accountID, props.month, props.year)
   }
 )
@@ -62,16 +54,26 @@ const showEntries = computed(
 
 <template>
   <Table v-if="showEntries">
-    <TableCaption v-if="!entryFetch.isLoading" class="mb-4">Entries from {{ showDateStr }}.</TableCaption>
+    <TableCaption
+      v-if="!entryFetch.isLoading"
+      class="mb-4"
+    >
+      Entries from {{ showDateStr }}.
+    </TableCaption>
     <TableBody>
-      <TableRow v-for="entry in entryFetch.entries" :key="entry.id">
+      <TableRow
+        v-for="entry in entryFetch.entries"
+        :key="entry.id"
+      >
         <TableCell class="font-medium">
           <div class="flex flex-col gap-1">
             <div class="flex justify-between items-start">
               <span class="text-sm text-gray-400">
                 {{ formatDate(entry.date) }}
               </span>
-              <Badge variant="outline">{{ entry.categoryName }}</Badge>
+              <Badge variant="outline">
+                {{ entry.categoryName }}
+              </Badge>
             </div>
             <div class="flex justify-between items-end">
               <span class="text-left text-[1rem] sm:text-base">
@@ -88,11 +90,19 @@ const showEntries = computed(
       </TableRow>
     </TableBody>
   </Table>
-  <div v-if="entryFetch.isLoading" class="flex items-center justify-center gap-2 py-8">
+  <div
+    v-if="entryFetch.isLoading"
+    class="flex items-center justify-center gap-2 py-8"
+  >
     <Spinner />
     <span class="text-gray-600">Loading entries...</span>
   </div>
-  <Button v-if="entryFetch.hasMore && showEntries" @click="fetchMore"> Load More </Button>
+  <Button
+    v-if="entryFetch.hasMore && showEntries"
+    @click="fetchMore"
+  >
+    Load More
+  </Button>
 </template>
 
 <style scoped></style>

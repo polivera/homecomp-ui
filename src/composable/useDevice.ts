@@ -1,11 +1,12 @@
+import { logger } from "@/lib/logger";
 import { ref, onMounted, onUnmounted, computed } from "vue";
 
 export function useDevice() {
   const isMobile = ref(false);
 
   const checkDevice = () => {
-    console.log(window.innerWidth);
-    console.log("check size");
+    logger.info('Checking window size')
+    logger.debug(`${window.innerWidth} x ${window.innerHeight}`)
     isMobile.value = window.innerWidth <= 768;
   };
 

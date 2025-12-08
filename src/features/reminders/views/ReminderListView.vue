@@ -13,8 +13,10 @@ const selectedYear = ref<number>(currentDate.getFullYear())
 
 <template>
   <div class="flex justify-between items-center border-b mb-5">
-    <h1 class="text-xl font-bold py-2 text-primary">Reminders List</h1>
-    <Button asChild>
+    <h1 class="text-xl font-bold py-2 text-primary">
+      Reminders List
+    </h1>
+    <Button as-child>
       <RouterLink to="/reminder/form">
         <PlusCircleIcon />
         <span>Add Reminder</span>
@@ -29,6 +31,9 @@ const selectedYear = ref<number>(currentDate.getFullYear())
       @update:year="year => (selectedYear = year)"
     />
 
-    <ReminderList :month="selectedMonth" :year="selectedYear" />
+    <ReminderList
+      :month="selectedMonth"
+      :year="selectedYear"
+    />
   </div>
 </template>

@@ -22,8 +22,10 @@ const month = ref<number>(currDate.getMonth());
 
 <template>
   <div class="flex justify-between items-center border-b">
-    <h1 class="text-xl font-bold py-2 text-primary">Entry List</h1>
-    <Button asChild>
+    <h1 class="text-xl font-bold py-2 text-primary">
+      Entry List
+    </h1>
+    <Button as-child>
       <RouterLink to="/entry/form">
         <PlusCircleIcon />
         <span>Add Entry</span>
@@ -31,7 +33,10 @@ const month = ref<number>(currDate.getMonth());
     </Button>
   </div>
   <div>
-    <MonthAndYearSelect v-model:month="month" v-model:year="year" />
+    <MonthAndYearSelect
+      v-model:month="month"
+      v-model:year="year"
+    />
   </div>
   <div class="py-4">
     <Tabs
@@ -48,15 +53,15 @@ const month = ref<number>(currDate.getMonth());
         </TabsTrigger>
       </TabsList>
       <TabsContent
-        class="m-4"
         v-for="account in accountList"
         :key="account.id"
+        class="m-4"
         :value="account.id.toString()"
       >
         <EntryList
-          :accountID="account.id"
           v-model:month="month"
           v-model:year="year"
+          :account-i-d="account.id"
         />
       </TabsContent>
     </Tabs>

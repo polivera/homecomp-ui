@@ -11,7 +11,7 @@ import { useDate } from "@/composable/useDate";
 import {
   useCreditCards,
   useCreditCardsEntries,
-} from "@/composable/creditcards/useCreditCard";
+} from "@/composable/creditcards";
 import { useCurrency } from "@/composable/currency";
 import { FormInput, InputType } from "@/components/custom_ui/FormInput";
 import { useCategories } from "@/composable/categories";
@@ -123,14 +123,17 @@ onMounted(async () => {
 </script>
 
 <template>
-  <form @submit="formSubmit" class="space-y-4">
+  <form
+    class="space-y-4"
+    @submit="formSubmit"
+  >
     <FormSelect
       name="creditCard"
       label="Credit Card"
       placeholder="Select a credit card"
       :items="creditCards"
       class="w-full"
-      :isLoading="ccData.isLoading"
+      :is-loading="ccData.isLoading"
       :required="true"
     />
 
@@ -148,7 +151,7 @@ onMounted(async () => {
       placeholder="Select a currency"
       :items="currencies"
       class="w-full"
-      :isLoading="currencyData.isLoading"
+      :is-loading="currencyData.isLoading"
       :required="true"
     />
 
@@ -157,7 +160,7 @@ onMounted(async () => {
       label="Category"
       placeholder="Select category"
       :items="categories"
-      :isLoading="categoryData.isLoading"
+      :is-loading="categoryData.isLoading"
       :error="categoryData.error"
       :required="true"
     />
@@ -205,6 +208,12 @@ onMounted(async () => {
       :type="InputType.Date"
     />
 
-    <Button variant="default" type="submit" class="w-full"> Submit </Button>
+    <Button
+      variant="default"
+      type="submit"
+      class="w-full"
+    >
+      Submit
+    </Button>
   </form>
 </template>

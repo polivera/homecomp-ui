@@ -138,7 +138,11 @@ const accountOptions = computed<SelectOption[]>(() =>
 
 <template>
   <form @submit="formSubmit">
-    <input type="hidden" name="entryType" v-model="form.values.id" />
+    <input
+      v-model="form.values.id"
+      type="hidden"
+      name="entryType"
+    >
     <FormSelect
       name="entryType"
       label="Entry Type"
@@ -147,11 +151,18 @@ const accountOptions = computed<SelectOption[]>(() =>
       class="w-full"
     />
 
-    <FormField v-slot="{ componentField }" name="date">
+    <FormField
+      v-slot="{ componentField }"
+      name="date"
+    >
       <FormItem class="mt-4">
         <FormLabel>Date</FormLabel>
         <FormControl>
-          <Input v-bind="componentField" type="date" class="w-full" />
+          <Input
+            v-bind="componentField"
+            type="date"
+            class="w-full"
+          />
         </FormControl>
       </FormItem>
     </FormField>
@@ -161,7 +172,7 @@ const accountOptions = computed<SelectOption[]>(() =>
       label="Account"
       placeholder=""
       :items="accountOptions"
-      :isLoading="accountFetch.isLoading"
+      :is-loading="accountFetch.isLoading"
       :error="accountFetch.error"
       class="mt-4"
     />
@@ -171,7 +182,7 @@ const accountOptions = computed<SelectOption[]>(() =>
       label="Category"
       placeholder=""
       :items="categoryOptions"
-      :isLoading="categories.isLoading"
+      :is-loading="categories.isLoading"
       :error="categories.error"
       class="mt-4"
     />
@@ -181,30 +192,50 @@ const accountOptions = computed<SelectOption[]>(() =>
       label="Household"
       placeholder="Select a household (optional)"
       :items="householdOptions"
-      :isLoading="householdFetch.isLoading"
+      :is-loading="householdFetch.isLoading"
       :error="householdFetch.error"
       class="mt-4"
     />
 
-    <FormField v-slot="{ componentField }" name="amount">
+    <FormField
+      v-slot="{ componentField }"
+      name="amount"
+    >
       <FormItem class="mt-4">
         <FormLabel>Amount</FormLabel>
         <FormControl>
-          <Input v-bind="componentField" step="0.01" type="number" class="w-full" />
+          <Input
+            v-bind="componentField"
+            step="0.01"
+            type="number"
+            class="w-full"
+          />
         </FormControl>
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="description">
+    <FormField
+      v-slot="{ componentField }"
+      name="description"
+    >
       <FormItem class="mt-4">
         <FormLabel>Description</FormLabel>
         <FormControl>
-          <Input v-bind="componentField" type="text" class="w-full" />
+          <Input
+            v-bind="componentField"
+            type="text"
+            class="w-full"
+          />
         </FormControl>
       </FormItem>
     </FormField>
 
-    <Button variant="default" type="submit" class="mt-4" :disabled="categories.isLoading || accountFetch.isLoading">
+    <Button
+      variant="default"
+      type="submit"
+      class="mt-4"
+      :disabled="categories.isLoading || accountFetch.isLoading"
+    >
       <Spinner v-if="categories.isLoading || accountFetch.isLoading || entryStore.isLoading" />
       <span v-else>Submit</span>
     </Button>

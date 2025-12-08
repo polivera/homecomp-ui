@@ -1,31 +1,30 @@
 import { generateEntries } from "@/composable/entries/mock.ts";
+import type { IEntryFetch } from "./types";
+import type { Ref } from "vue";
 
-export interface IEntry {
-    id: string;
-    account: number;
-    accountName: string;
-    category: number;
-    categoryName: string;
-    household: number | null;
-    date: string;
-    description: string;
-    amount: number;
-    currency: string;
-    entryType: string;
+export const resetFetchData = (entryFetch: Ref<IEntryFetch>): void => {
+    entryFetch.value.entries = []
 }
 
-export interface IEntryFetch {
-    isLoading: boolean;
-    entries: IEntry[];
-    hasMore: boolean;
-    error: string | null;
-}
 
-export const fetchEntries = async (
-    accountID: number, month: number, year: number, lastID: string | null = null
-): Promise<IEntry[]> => {
-    await new Promise((resolve) => {
-        setTimeout(resolve, 1500)
-    })
-    return generateEntries(10, month, year)
+export const fetch = async (
+    entryFetch: Ref<IEntryFetch>,
+    accountID: number,
+    month: number,
+    year: number,
+) => {
+    entryFetch.value.isLoading = true
+    try {
+        const newEntries = generateEntries(10, month, year)
+        if (newEntries.length === 0) {
+            entryFetch.value.hasMore = false;
+            return
+        }
+        entryFetch.value.entries = [...entryFetch.value.entries, ...newEntries]
+        return
+    } catch (error) {
+        entryFetch.value.error = 'Failed to fetch entries'
+    } finally {
+        entryFetch.value.isLoading = false
+    }
 }

@@ -1,51 +1,35 @@
-/** */
 <script setup lang="ts">
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { onMounted } from "vue";
-import { useReminders } from "@/composable/reminders";
-import { useReminderInterval } from "@/composable/useReminderInterval";
-import ReminderPayForm from "./ReminderPayForm.vue";
-import { useCurrency } from "@/composable/currency";
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { onMounted } from 'vue'
+import { useReminders } from '@/composable/reminders'
+import { useReminderInterval } from '@/composable/useReminderInterval'
+import ReminderPayForm from './ReminderPayForm.vue'
+import { useCurrency } from '@/composable/currency'
 
 const props = defineProps<{
-  reminderID: string;
-}>();
+  reminderID: string
+}>()
 
-const { formatMoney } = useCurrency();
-const { detailData: reminderData, detail: reminderFetch } = useReminders();
-const { getIntervalText } = useReminderInterval();
+const { formatMoney } = useCurrency()
+const { detailData: reminderData, detail: reminderFetch } = useReminders()
+const { getIntervalText } = useReminderInterval()
 
-const handlePaySubmit = (values: {
-  amount: number;
-  date: string;
-  account: number;
-}) => {
-  console.log("form submitted");
-  console.log(values);
-};
+const handlePaySubmit = (values: { amount: number; date: string; account: number }) => {}
 
 const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-};
+  const date = new Date(dateString)
+  return date.toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+}
 
 // TODO: Load details
 onMounted(async () => {
-  console.log("fetching data " + props.reminderID);
-  await reminderFetch(props.reminderID);
-  console.log(reminderData.value.data);
-});
+  await reminderFetch(props.reminderID)
+})
 </script>
 
 <template>
@@ -53,15 +37,17 @@ onMounted(async () => {
     <CardHeader>
       <div class="flex justify-between items-start">
         <div>
-          <CardTitle class="text-xl">{{
-            reminderData.data.description
-          }}</CardTitle>
+          <CardTitle class="text-xl">
+            {{ reminderData.data.description }}
+          </CardTitle>
           <CardDescription v-if="reminderData.data.household">
             <strong>Household:</strong>
             {{ reminderData.data.householdName }}
           </CardDescription>
         </div>
-        <Badge variant="outline">{{ reminderData.data.categoryName }}</Badge>
+        <Badge variant="outline">
+          {{ reminderData.data.categoryName }}
+        </Badge>
       </div>
     </CardHeader>
     <CardContent class="space-y-4">
@@ -73,17 +59,14 @@ onMounted(async () => {
         <div>
           <span class="text-gray-500">Frequency</span>
           <p class="font-medium">
-            {{
-              getIntervalText(
-                reminderData.data.interval,
-                reminderData.data.intervalUnit,
-              )
-            }}
+            {{ getIntervalText(reminderData.data.interval, reminderData.data.intervalUnit) }}
           </p>
         </div>
         <div v-if="reminderData.data.household">
           <span class="text-gray-500">Owner</span>
-          <p class="font-medium">{{ reminderData.data.ownerName }}</p>
+          <p class="font-medium">
+            {{ reminderData.data.ownerName }}
+          </p>
         </div>
         <div>
           <span class="text-gray-500">Start Date</span>
@@ -100,11 +83,7 @@ onMounted(async () => {
         <div>
           <span class="text-gray-500">End Date</span>
           <p class="font-medium">
-            {{
-              reminderData.data.dateEnd
-                ? formatDate(reminderData.data.dateEnd)
-                : "No end date"
-            }}
+            {{ reminderData.data.dateEnd ? formatDate(reminderData.data.dateEnd) : 'No end date' }}
           </p>
         </div>
       </div>

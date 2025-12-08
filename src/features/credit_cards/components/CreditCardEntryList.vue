@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useCreditCardsEntries } from '@/composable/creditcards/useCreditCard'
+import { useCreditCardsEntries } from '@/composable/creditcards'
 import type { ICreditCardEntryListProps } from './types'
 import { computed, onMounted, watch } from 'vue'
 import { Table, TableBody, TableCaption, TableCell, TableRow } from '@/components/ui/table'
@@ -29,7 +29,6 @@ const showDateStr = computed(() => formatDateMonthYearOnly(props.year, props.mon
 
 onMounted(async () => {
   await ccFetch(props.cardId, props.month, props.year)
-  console.log(ccData.value)
 })
 
 watch(
@@ -59,7 +58,9 @@ const showEntries = computed(() => ccData.value.cards && ccData.value.cards.leng
             <div class="flex flex-col gap-1">
               <div class="flex justify-between items-start">
                 <span class="text-sm text-gray-400"> Start: {{ formatDate(entry.startDate) }} </span>
-                <Badge variant="outline" class="ml-1">{{ entry.category }}</Badge>
+                <Badge variant="outline" class="ml-1">
+                  {{ entry.category }}
+                </Badge>
               </div>
               <div class="flex justify-between items-end">
                 <span class="text-left text-[1rem] sm:text-base">

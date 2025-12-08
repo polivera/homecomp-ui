@@ -11,7 +11,7 @@ import { LoginForm } from "@/features/auth/components";
         </div>
       </div>
     </div>
-    <div class="relative hidden bg-muted lg:block"></div>
+    <div class="relative hidden bg-muted lg:block" />
   </div>
 </template>
 

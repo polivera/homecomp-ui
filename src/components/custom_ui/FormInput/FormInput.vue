@@ -1,38 +1,39 @@
 <script setup lang="ts">
-import { InputType } from "./types.ts";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { InputType } from './types.ts'
+import { FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 
 interface FormInputProps {
-  label: string;
-  name: string;
-  type?: InputType;
-  error?: string | null;
-  placeholder?: string;
-  class?: string;
-  required?: boolean;
-  step?: number | string;
+  label: string
+  name: string
+  type?: InputType
+  error?: string | null
+  placeholder?: string
+  class?: string
+  required?: boolean
+  step?: number | string
 }
 
 const props = withDefaults(defineProps<FormInputProps>(), {
   error: null,
   required: false,
   type: InputType.Text,
-  step: "0.01",
-});
+  step: '0.01',
+})
 </script>
 
 <template>
-  <FormField v-slot="{ componentField }" :name="props.name">
+  <FormField
+    v-slot="{ componentField }"
+    :name="props.name"
+  >
     <FormItem :class="props.class">
       <FormLabel>
         {{ props.label }}
-        <span v-if="props.required" class="text-destructive">*</span>
+        <span
+          v-if="props.required"
+          class="text-destructive"
+        >*</span>
       </FormLabel>
       <FormControl>
         <Input

@@ -166,7 +166,11 @@ onMounted(async () => {
 
 <template>
   <form @submit="formSubmit">
-    <input type="hidden" name="id" v-model="form.values.id" />
+    <input
+      v-model="form.values.id"
+      type="hidden"
+      name="id"
+    >
     <FormSelect
       name="entryType"
       label="Entry Type"
@@ -190,23 +194,37 @@ onMounted(async () => {
       :required="true"
     />
 
-    <FormField v-slot="{ componentField }" name="dateStart">
+    <FormField
+      v-slot="{ componentField }"
+      name="dateStart"
+    >
       <FormItem class="mt-4">
         <FormLabel>
           Start Date
           <span class="text-destructive">*</span>
         </FormLabel>
         <FormControl>
-          <Input v-bind="componentField" type="date" class="w-full" />
+          <Input
+            v-bind="componentField"
+            type="date"
+            class="w-full"
+          />
         </FormControl>
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="dateEnd">
+    <FormField
+      v-slot="{ componentField }"
+      name="dateEnd"
+    >
       <FormItem class="mt-4">
         <FormLabel> End Date </FormLabel>
         <FormControl>
-          <Input v-bind="componentField" type="date" class="w-full" />
+          <Input
+            v-bind="componentField"
+            type="date"
+            class="w-full"
+          />
         </FormControl>
       </FormItem>
     </FormField>
@@ -216,7 +234,7 @@ onMounted(async () => {
       label="Category"
       placeholder="Select category"
       :items="categoryOptions"
-      :isLoading="categoryFetch.isLoading"
+      :is-loading="categoryFetch.isLoading"
       :error="categoryFetch.error"
       :required="true"
     />
@@ -226,31 +244,47 @@ onMounted(async () => {
       label="Household"
       placeholder="Select household (optional)"
       :items="householdOptions"
-      :isLoading="householdFetch.isLoading"
+      :is-loading="householdFetch.isLoading"
       :error="householdFetch.error"
       :required="false"
     />
 
-    <FormField v-slot="{ componentField }" name="description">
+    <FormField
+      v-slot="{ componentField }"
+      name="description"
+    >
       <FormItem class="mt-4">
         <FormLabel>
           Description
           <span class="text-destructive">*</span>
         </FormLabel>
         <FormControl>
-          <Input v-bind="componentField" type="text" class="w-full" />
+          <Input
+            v-bind="componentField"
+            type="text"
+            class="w-full"
+          />
         </FormControl>
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="amount">
+    <FormField
+      v-slot="{ componentField }"
+      name="amount"
+    >
       <FormItem class="mt-4">
         <FormLabel>
           Amount
           <span class="text-destructive">*</span>
         </FormLabel>
         <FormControl>
-          <Input v-bind="componentField" step="0.01" type="number" class="w-full" placeholder="Enter amount" />
+          <Input
+            v-bind="componentField"
+            step="0.01"
+            type="number"
+            class="w-full"
+            placeholder="Enter amount"
+          />
         </FormControl>
       </FormItem>
     </FormField>
