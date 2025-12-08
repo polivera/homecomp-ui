@@ -13,7 +13,7 @@ export const useDate = (locale?: string) => {
     }
 
     const getCurrentMonth = (): number => {
-        return currentDate.getMonth();
+        return currentDate.getMonth() + 1;
     }
 
     const getCurrentYear = (): number => {

@@ -56,17 +56,9 @@ const showReminders = computed(
 
 <template>
   <Table v-if="showReminders">
-    <TableCaption
-      v-if="!reminderFetchData.isLoading"
-      class="mb-4"
-    >
-      Reminders for {{ showDateStr }}.
-    </TableCaption>
+    <TableCaption v-if="!reminderFetchData.isLoading" class="mb-4"> Reminders for {{ showDateStr }}. </TableCaption>
     <TableBody>
-      <TableRow
-        v-for="reminder in reminderFetchData.reminders"
-        :key="reminder.id"
-      >
+      <TableRow v-for="reminder in reminderFetchData.reminders" :key="reminder.id">
         <TableCell class="p-0">
           <RouterLink
             :to="{
@@ -80,10 +72,7 @@ const showReminders = computed(
                 <span class="text-sm text-gray-400">
                   From: {{ formatDate(reminder.dateStart) }}
                   <span v-if="reminder.dateEnd"> - To: {{ formatDate(reminder.dateEnd) }} </span>
-                  <Badge
-                    variant="outline"
-                    class="ml-1"
-                  >{{ reminder.categoryName }}</Badge>
+                  <Badge variant="outline" class="ml-1">{{ reminder.categoryName }}</Badge>
                 </span>
               </div>
               <div class="flex justify-between items-end">
@@ -108,20 +97,11 @@ const showReminders = computed(
       </TableRow>
     </TableBody>
   </Table>
-  <div
-    v-if="reminderFetchData.isLoading"
-    class="flex items-center justify-center gap-2 py-8"
-  >
+  <div v-if="reminderFetchData.isLoading" class="flex items-center justify-center gap-2 py-8">
     <Spinner />
     <span class="text-gray-600">Loading reminders...</span>
   </div>
-
-  <Button
-    v-if="reminderFetchData.hasMore && showReminders"
-    @click="reminderFetchAction"
-  >
-    Load More
-  </Button>
+  <Button v-if="reminderFetchData.hasMore && showReminders" @click="reminderFetchAction"> Load More </Button>
 </template>
 
 <style scoped></style>

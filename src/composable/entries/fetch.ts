@@ -15,6 +15,9 @@ export const fetch = async (
 ) => {
     entryFetch.value.isLoading = true
     try {
+        await new Promise((resolve) => {
+            setTimeout(resolve, 600);
+        });
         const newEntries = generateEntries(10, month, year)
         if (newEntries.length === 0) {
             entryFetch.value.hasMore = false;

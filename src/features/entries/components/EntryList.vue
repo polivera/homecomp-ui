@@ -54,17 +54,9 @@ const showEntries = computed(
 
 <template>
   <Table v-if="showEntries">
-    <TableCaption
-      v-if="!entryFetch.isLoading"
-      class="mb-4"
-    >
-      Entries from {{ showDateStr }}.
-    </TableCaption>
+    <TableCaption v-if="!entryFetch.isLoading" class="mb-4"> Entries from {{ showDateStr }}. </TableCaption>
     <TableBody>
-      <TableRow
-        v-for="entry in entryFetch.entries"
-        :key="entry.id"
-      >
+      <TableRow v-for="entry in entryFetch.entries" :key="entry.id">
         <TableCell class="font-medium">
           <div class="flex flex-col gap-1">
             <div class="flex justify-between items-start">
@@ -90,19 +82,11 @@ const showEntries = computed(
       </TableRow>
     </TableBody>
   </Table>
-  <div
-    v-if="entryFetch.isLoading"
-    class="flex items-center justify-center gap-2 py-8"
-  >
+  <div v-if="entryFetch.isLoading" class="flex items-center justify-center gap-2 py-8">
     <Spinner />
     <span class="text-gray-600">Loading entries...</span>
   </div>
-  <Button
-    v-if="entryFetch.hasMore && showEntries"
-    @click="fetchMore"
-  >
-    Load More
-  </Button>
+  <Button v-if="entryFetch.hasMore && showEntries" @click="fetchMore"> Load More </Button>
 </template>
 
 <style scoped></style>
