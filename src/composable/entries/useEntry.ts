@@ -17,7 +17,7 @@ export const useEntries = () => {
         entryStore: computed(() => entryStore.value),
         entryFetch: computed(() => entryFetch.value),
         resetFetchData: () => resetFetchData(entryFetch),
-        fetchEntries: (accountID: number, month: number, year: number, lastID: string | null = null) => fetch(
+        fetchEntries: (accountID: number, month: number, year: number) => fetch(
             entryFetch, accountID, month, year
         ),
         storeEntry,

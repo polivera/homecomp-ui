@@ -9,7 +9,7 @@ import { useCurrency } from '@/composable/currency'
 import { useDate } from '@/composable/useDate'
 
 const props = defineProps<{
-  accountID: number
+  accountId: number
   year: number
   month: number
 }>()
@@ -25,25 +25,21 @@ const formatDate = (dateString: string): string => {
 }
 
 const fetchMore = async () => {
-  await fetchEntries(
-    props.accountID,
-    props.month,
-    props.year,
-    entryFetch.value.entries[entryFetch.value.entries.length - 1].id
-  )
+  await fetchEntries(props.accountId, props.month, props.year)
 }
 
 onMounted(async () => {
-  await fetchEntries(props.accountID, props.month, props.year)
+  await fetchEntries(props.accountId, props.month, props.year)
 })
 
 watch(
-  () => [props.accountID, props.month, props.year],
+  () => [props.accountId, props.month, props.year],
   async () => {
+    console.log('seleted!!!')
     resetFetchData()
     // Note: does work, but I don't like it
     showDateStr.value = formatDateMonthYearOnly(props.month, props.year)
-    await fetchEntries(props.accountID, props.month, props.year)
+    await fetchEntries(props.accountId, props.month, props.year)
   }
 )
 

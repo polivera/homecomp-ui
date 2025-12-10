@@ -1,2 +1,2 @@
 export { default as FormInput } from './FormInput.vue'
-export { InputType } from './types.ts'
+export { InputType, type FormInputProps } from './types.ts'
