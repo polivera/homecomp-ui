@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { EntryList } from '@/features/entries/components'
-import { MonthAndYearSelect } from '@/components/custom_ui/MonthAndYearSelect'
+import { EntryFilters } from '@/components/custom_ui/EntryFilters'
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { PlusCircleIcon } from 'lucide-vue-next'
 import Button from '@/components/ui/button/Button.vue'
 import { useDate } from '@/composable/useDate'
-import AccountSelector from '@/components/custom_ui/AccountSelector/AccountSelector.vue'
 
 const { getCurrentMonth, getCurrentYear } = useDate()
 
@@ -25,11 +24,12 @@ const selectedAccountId = ref<number>(1)
       </RouterLink>
     </Button>
   </div>
-  <div>
-    <MonthAndYearSelect v-model:month="month" v-model:year="year" />
-  </div>
   <div class="flex flex-col gap-4 py-4">
-    <AccountSelector v-model:account-id="selectedAccountId" :month="month" :year="year" />
+    <EntryFilters
+      v-model:month="month"
+      v-model:year="year"
+      v-model:account-id="selectedAccountId"
+    />
     <EntryList :month="month" v-model:year="year" :account-id="selectedAccountId" />
   </div>
 </template>

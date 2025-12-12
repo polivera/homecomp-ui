@@ -32,7 +32,7 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: 'Select option',
   searchPlaceholder: 'Search...',
   emptyMessage: 'No items found.',
-  buttonClass: 'w-40',
+  buttonClass: 'min-w-40 max-w-xs',
 })
 
 const emit = defineEmits<{
@@ -45,18 +45,13 @@ const handleUpdate = (value: unknown) => {
 </script>
 
 <template>
-  <Combobox
-    :model-value="modelValue"
-    by="label"
-    @update:model-value="handleUpdate"
-  >
+  <Combobox :model-value="modelValue" by="label" @update:model-value="handleUpdate">
     <ComboboxAnchor as-child>
       <ComboboxTrigger as-child>
-        <Button
-          variant="outline"
-          :class="cn('justify-between', props.buttonClass)"
-        >
-          {{ modelValue?.label ?? props.placeholder }}
+        <Button variant="outline" :class="cn('justify-between', props.buttonClass)">
+          <span class="truncate">
+            {{ modelValue?.label ?? props.placeholder }}
+          </span>
           <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </ComboboxTrigger>
@@ -76,11 +71,7 @@ const handleUpdate = (value: unknown) => {
       <ComboboxEmpty>{{ props.emptyMessage }}</ComboboxEmpty>
 
       <ComboboxGroup>
-        <ComboboxItem
-          v-for="item in props.items"
-          :key="item.value"
-          :value="item"
-        >
+        <ComboboxItem v-for="item in props.items" :key="item.value" :value="item">
           {{ item.label }}
           <ComboboxItemIndicator>
             <Check :class="cn('ml-auto h-4 w-4')" />

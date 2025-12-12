@@ -9,5 +9,8 @@
       "mcp__chrome-devtools__navigate_page",
       "mcp__chrome-devtools__take_snapshot"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "chrome-devtools"
+  ]
 }
