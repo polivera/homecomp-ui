@@ -28,7 +28,7 @@ const selectedAccountId = ref<number>(1)
   <div>
     <MonthAndYearSelect v-model:month="month" v-model:year="year" />
   </div>
-  <div class="py-4">
+  <div class="flex flex-col gap-4 py-4">
     <AccountSelector v-model:account-id="selectedAccountId" :month="month" :year="year" />
     <EntryList :month="month" v-model:year="year" :account-id="selectedAccountId" />
   </div>

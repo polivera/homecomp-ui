@@ -17,7 +17,7 @@ import type { SelectOption } from '@/components/custom_ui/FormSelect'
 import type { IAccount } from '@/composable/accounts'
 import { useEntryType } from '@/composable/entrytype'
 
-const { accountFetch, fetch: fetchAccounts } = useAccounts()
+const { fetchData, fetch: fetchAccounts } = useAccounts()
 const { fetchedData: categories, fetch: fetchCategories } = useCategories()
 const { entryStore, storeEntry } = useEntries()
 const { fetch: fetchHouseholds, fetchedData: householdFetch } = useHousehold()
@@ -42,7 +42,7 @@ const formSchema = toTypedSchema(
     amount: z.number().positive().multipleOf(0.01),
     description: z.string().min(1),
     date: z.string(),
-    account: z.number().refine(value => accountFetch.value.accounts.some(account => account.id === value), {}),
+    account: z.number().refine(value => fetchData.value.accounts.some(account => account.id === value), {}),
     household: z.number().optional().nullable(),
     category: z.number().refine(value => categories.value.categories.some(category => category.id === value), {}),
   })
@@ -54,7 +54,7 @@ const form = useForm({
   initialValues: {
     entryType: 'expense', // Pre-select here
     date: new Date().toISOString().split('T')[0],
-    account: accountFetch.value.accounts.find(account => account.default)?.id || accountFetch.value.accounts[0]?.id,
+    account: fetchData.value.accounts.find(account => account.default)?.id || fetchData.value.accounts[0]?.id,
   },
 })
 
@@ -86,7 +86,7 @@ const formSubmit = form.handleSubmit(async values => {
     values: {
       entryType: 'expense',
       date: new Date().toISOString().split('T')[0],
-      account: accountFetch.value.accounts.find(account => account.default)?.id || accountFetch.value.accounts[0]?.id,
+      account: fetchData.value.accounts.find(account => account.default)?.id || fetchData.value.accounts[0]?.id,
       category: categories.value.categories.find(category => category.name === 'Uncategorized')?.id,
       description: '',
       amount: undefined,
@@ -103,7 +103,7 @@ const getAccounts = async () => {
   await fetchAccounts()
   form.setFieldValue(
     'account',
-    accountFetch.value.accounts.find(account => account.default)?.id || accountFetch.value.accounts[0].id
+    fetchData.value.accounts.find(account => account.default)?.id || fetchData.value.accounts[0].id
   )
 }
 
@@ -129,7 +129,7 @@ const categoryOptions = computed<SelectOption[]>(() =>
 )
 
 const accountOptions = computed<SelectOption[]>(() =>
-  accountFetch.value.accounts.map(it => ({
+  fetchData.value.accounts.map(it => ({
     value: it.id,
     label: buildAccountName(it),
   }))
@@ -138,11 +138,7 @@ const accountOptions = computed<SelectOption[]>(() =>
 
 <template>
   <form @submit="formSubmit">
-    <input
-      v-model="form.values.id"
-      type="hidden"
-      name="entryType"
-    >
+    <input v-model="form.values.id" type="hidden" name="entryType" />
     <FormSelect
       name="entryType"
       label="Entry Type"
@@ -151,18 +147,11 @@ const accountOptions = computed<SelectOption[]>(() =>
       class="w-full"
     />
 
-    <FormField
-      v-slot="{ componentField }"
-      name="date"
-    >
+    <FormField v-slot="{ componentField }" name="date">
       <FormItem class="mt-4">
         <FormLabel>Date</FormLabel>
         <FormControl>
-          <Input
-            v-bind="componentField"
-            type="date"
-            class="w-full"
-          />
+          <Input v-bind="componentField" type="date" class="w-full" />
         </FormControl>
       </FormItem>
     </FormField>
@@ -172,8 +161,8 @@ const accountOptions = computed<SelectOption[]>(() =>
       label="Account"
       placeholder=""
       :items="accountOptions"
-      :is-loading="accountFetch.isLoading"
-      :error="accountFetch.error"
+      :is-loading="fetchData.isLoading"
+      :error="fetchData.error"
       class="mt-4"
     />
 
@@ -197,46 +186,26 @@ const accountOptions = computed<SelectOption[]>(() =>
       class="mt-4"
     />
 
-    <FormField
-      v-slot="{ componentField }"
-      name="amount"
-    >
+    <FormField v-slot="{ componentField }" name="amount">
       <FormItem class="mt-4">
         <FormLabel>Amount</FormLabel>
         <FormControl>
-          <Input
-            v-bind="componentField"
-            step="0.01"
-            type="number"
-            class="w-full"
-          />
+          <Input v-bind="componentField" step="0.01" type="number" class="w-full" />
         </FormControl>
       </FormItem>
     </FormField>
 
-    <FormField
-      v-slot="{ componentField }"
-      name="description"
-    >
+    <FormField v-slot="{ componentField }" name="description">
       <FormItem class="mt-4">
         <FormLabel>Description</FormLabel>
         <FormControl>
-          <Input
-            v-bind="componentField"
-            type="text"
-            class="w-full"
-          />
+          <Input v-bind="componentField" type="text" class="w-full" />
         </FormControl>
       </FormItem>
     </FormField>
 
-    <Button
-      variant="default"
-      type="submit"
-      class="mt-4"
-      :disabled="categories.isLoading || accountFetch.isLoading"
-    >
-      <Spinner v-if="categories.isLoading || accountFetch.isLoading || entryStore.isLoading" />
+    <Button variant="default" type="submit" class="mt-4" :disabled="categories.isLoading || fetchData.isLoading">
+      <Spinner v-if="categories.isLoading || fetchData.isLoading || entryStore.isLoading" />
       <span v-else>Submit</span>
     </Button>
   </form>
