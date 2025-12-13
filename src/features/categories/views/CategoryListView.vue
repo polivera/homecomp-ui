@@ -1,5 +1,5 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div>Household Entries List</div>
+  <div>Category List View</div>
 </template>

@@ -29,7 +29,7 @@ const emit = defineEmits<{
   submit: [values: IReminderPayFormData]
 }>()
 
-const { accountFetch, fetchWithCurrency: fetchAccounts } = useAccounts()
+const { fetchData: accountData, fetchWithCurrency: fetchAccounts } = useAccounts()
 const { getTodayISO } = useDate()
 
 const dialogOpen = ref(false)
@@ -56,7 +56,7 @@ const formSubmit = form.handleSubmit(async values => {
 })
 
 const accountOptions = computed<SelectOption[]>(() => {
-  return accountFetch.value.accounts.map(account => ({
+  return accountData.value.accounts.map(account => ({
     value: account.id,
     label: account.name,
   }))
@@ -106,8 +106,8 @@ onMounted(async () => {
             label="Account"
             placeholder="Select an account"
             :items="accountOptions"
-            :is-loading="accountFetch.isLoading"
-            :error="accountFetch.error"
+            :is-loading="accountData.isLoading"
+            :error="accountData.error"
             :required="true"
           />
         </div>

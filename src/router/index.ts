@@ -6,6 +6,11 @@ import { EntryListView, EntryFormView } from "@/features/entries/views";
 import { ReminderListView, ReminderFormView, ReminderDetailView } from '@/features/reminders/views'
 import { CreditCardEntryFormView, CreditCardEntryListView, CreditCardFormView, CreditCardListView } from '@/features/credit_cards/views/';
 import { HouseholdEntryListView, HouseholdListView, HouseholdFormView } from '@/features/households/views/';
+import { MyAccountsListView } from '@/features/accounts/views/';
+import { MyProfileView } from '@/features/reminders/users/views/';
+import { CategoryListView } from '@/features/categories/views/';
+
+
 
 const auth = useAuth();
 
@@ -23,6 +28,7 @@ const router = createRouter({
             name: 'dashboard',
             component: Dashboard,
         },
+        // Entries ----------------------------------------------
         {
             path: '/entry/form',
             name: 'add-entry',
@@ -33,6 +39,7 @@ const router = createRouter({
             name: 'entry-list',
             component: EntryListView,
         },
+        // Reminders ----------------------------------------------
         {
             path: '/reminder/list',
             name: 'reminder-list',
@@ -49,7 +56,7 @@ const router = createRouter({
             name: 'reminder-detail',
             component: ReminderDetailView
         },
-        // Credit Cards
+        // Credit Cards ----------------------------------------------
         {
             path: '/credit-card-entry/list',
             name: 'credit-card-entry-list',
@@ -75,7 +82,7 @@ const router = createRouter({
             name: 'credit-card-list',
             component: CreditCardListView
         },
-        // Households
+        // Households ----------------------------------------------
         {
             path: '/household-entry/list',
             name: 'household-entry-list',
@@ -90,6 +97,29 @@ const router = createRouter({
             path: '/household/form',
             name: 'household-add',
             component: HouseholdFormView
+        },
+        // Accounts ----------------------------------------------
+        {
+            path: '/account/list',
+            name: 'accounts-list',
+            component: MyAccountsListView
+        },
+        // Users ----------------------------------------------
+        {
+            path: '/my-profile',
+            name: 'my-profile',
+            component: MyProfileView
+        },
+        {
+            path: '/admin/user/list',
+            name: 'user-list',
+            component: MyProfileView
+        },
+        // Categories ----------------------------------------------
+        {
+            path: '/admin/category/list',
+            name: 'category-list',
+            component: CategoryListView
         },
     ],
 })

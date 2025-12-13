@@ -65,7 +65,7 @@ const items = [
 const settings = [
   {
     title: 'My Accounts',
-    url: '#',
+    url: '/account/list',
     icon: PiggyBankIcon,
   },
   {
@@ -80,7 +80,7 @@ const settings = [
   },
   {
     title: 'My Profile',
-    url: '#',
+    url: '/my-profile',
     icon: UserPenIcon,
   },
 ]
@@ -88,12 +88,12 @@ const settings = [
 const admin = [
   {
     title: 'Categories',
-    url: '#',
+    url: '/admin/category/list',
     icon: ChartColumnStackedIcon,
   },
   {
     title: 'Users',
-    url: '#',
+    url: '/admin/user/list',
     icon: UserRoundCogIcon,
   },
 ]
@@ -119,10 +119,7 @@ const admin = [
       <SidebarGroup>
         <SidebarGroupLabel>Application</SidebarGroupLabel>
         <SidebarGroupContent>
-          <SidebarMenuItem
-            v-for="item in items"
-            :key="item.title"
-          >
+          <SidebarMenuItem v-for="item in items" :key="item.title">
             <SidebarMenuButton as-child>
               <RouterLink :to="item.url">
                 <component :is="item.icon" />
@@ -135,10 +132,7 @@ const admin = [
       <SidebarGroup>
         <SidebarGroupLabel>Settings</SidebarGroupLabel>
         <SidebarGroupContent>
-          <SidebarMenuItem
-            v-for="item in settings"
-            :key="item.title"
-          >
+          <SidebarMenuItem v-for="item in settings" :key="item.title">
             <SidebarMenuButton as-child>
               <RouterLink :to="item.url">
                 <component :is="item.icon" />
@@ -151,10 +145,7 @@ const admin = [
       <SidebarGroup>
         <SidebarGroupLabel>Admin</SidebarGroupLabel>
         <SidebarGroupContent>
-          <SidebarMenuItem
-            v-for="item in admin"
-            :key="item.title"
-          >
+          <SidebarMenuItem v-for="item in admin" :key="item.title">
             <SidebarMenuButton as-child>
               <RouterLink :to="item.url">
                 <component :is="item.icon" />
