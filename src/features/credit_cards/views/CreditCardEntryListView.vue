@@ -2,10 +2,10 @@
 import Button from '@/components/ui/button/Button.vue'
 import { PlusCircleIcon } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
-import { MonthAndYearSelect } from '@/components/custom_ui/MonthAndYearSelect'
 import { useDate } from '@/composable/useDate'
 import { ref } from 'vue'
 import CreditCardEntryList from '../components/CreditCardEntryList.vue'
+import EntryFilters from '@/components/custom_ui/EntryFilters/EntryFilters.vue'
 
 const { getCurrentMonth, getCurrentYear } = useDate()
 const selectedMonth = ref<number>(getCurrentMonth())
@@ -24,9 +24,6 @@ const selectedCard = ref<string>('mycard')
     </Button>
   </div>
 
-  <div class="flex flex-col gap-4 mt-5">
-    <MonthAndYearSelect v-model:month="selectedMonth" v-model:year="selectedYear" />
-  </div>
-
+  <EntryFilters v-model:month="selectedMonth" v-model:year="selectedYear" :showAccountFilter="false" />
   <CreditCardEntryList v-model:year="selectedYear" v-model:card-id="selectedCard" :month="selectedMonth" />
 </template>

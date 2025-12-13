@@ -127,10 +127,10 @@ onMounted(async () => {
   <div class="flex flex-col px-4 py-3 bg-muted/30 rounded-md border border-border/50">
     <div class="mb-2 font-semibold">Filters</div>
     <!-- Account Filter - Primary -->
-    <div class="flex flex-row gap-4">
+    <div class="flex flex-row flex-wrap gap-4">
       <div v-if="showAccountFilter" class="flex flex-row items-center gap-3 flex-[2] min-w-[280px]">
         <label class="text-base text-gray-900 min-w-[80px]">Account</label>
-        <div v-if="accountData.accounts.length > 0" class="flex-1">
+        <div v-if="accountData.accounts.length > 0" class="w-full md:w-45">
           <SearchableCombobox
             v-model="selectedAccount"
             :items="accountItems"
@@ -146,9 +146,9 @@ onMounted(async () => {
       </div>
 
       <!-- Month Filter -->
-      <div v-if="showMonthFilter" class="flex flex-row items-center gap-3 w-auto">
-        <label class="text-sm font-medium text-gray-700 min-w-[50px]">Month</label>
-        <div class="w-36">
+      <div v-if="showMonthFilter" class="flex flex-row items-center gap-3 w-full md:w-auto">
+        <label class="text-sm font-medium text-gray-700 md:min-w-[50px] min-w-[80px]">Month</label>
+        <div class="w-full md:w-36">
           <SearchableCombobox
             v-model="selectedMonth"
             :items="months"
@@ -161,9 +161,9 @@ onMounted(async () => {
       </div>
 
       <!-- Year Filter -->
-      <div v-if="showYearFilter" class="flex flex-row items-center gap-3 w-auto">
-        <label class="text-sm font-medium text-gray-700 min-w-[40px]">Year</label>
-        <div class="w-28">
+      <div v-if="showYearFilter" class="flex flex-row items-center gap-3 w-full md:w-auto">
+        <label class="text-sm font-medium text-gray-700 md:min-w-[40px] min-w-[80px]">Year</label>
+        <div class="w-full md:w-28">
           <SearchableCombobox
             v-model="selectedYear"
             :items="years"

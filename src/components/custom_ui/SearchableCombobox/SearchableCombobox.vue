@@ -32,7 +32,7 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: 'Select option',
   searchPlaceholder: 'Search...',
   emptyMessage: 'No items found.',
-  buttonClass: 'min-w-40 max-w-xs',
+  buttonClass: 'w-full',
 })
 
 const emit = defineEmits<{

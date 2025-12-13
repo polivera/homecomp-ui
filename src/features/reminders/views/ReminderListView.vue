@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import Button from '@/components/ui/button/Button.vue'
 import { RouterLink } from 'vue-router'
 import { ReminderList } from '@/features/reminders/components'
-import { ref } from 'vue'
 import { PlusCircleIcon } from 'lucide-vue-next'
 import EntryFilters from '@/components/custom_ui/EntryFilters/EntryFilters.vue'
 
