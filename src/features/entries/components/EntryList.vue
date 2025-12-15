@@ -55,7 +55,7 @@ const showEntries = computed(
       <TableRow v-for="entry in entryFetch.entries" :key="entry.id">
         <TableCell class="font-medium">
           <div class="flex flex-col gap-1">
-            <div class="flex justify-between items-start">
+            <div class="flex justify-left gap-2 items-start">
               <span class="text-sm text-gray-400">
                 {{ formatDate(entry.date) }}
               </span>

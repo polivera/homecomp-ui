@@ -63,3 +63,14 @@ export interface ICreditCardDetail {
     error: string | null;
     data: ICreditCard | null;
 }
+
+export interface ICreditCardForm {
+    id: string | null;
+    name: string;
+    limits: ICreditCardLimits[];
+}
+
+export interface ICreditCardStore {
+    isLoading: boolean;
+    error: string | null;
+}

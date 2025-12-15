@@ -5,7 +5,7 @@ import * as z from 'zod'
 import { FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { type IAccountForm, useAccounts } from '@/composable/accounts'
+import { type ICreditCardForm, useCreditCards } from '@/composable/creditcards'
 import { useCurrency } from '@/composable/currency'
 import { useToast } from '@/components/ui/toast'
 import { Spinner } from '@/components/ui/spinner'
@@ -13,7 +13,7 @@ import FormSelect from '@/components/custom_ui/FormSelect/FormSelect.vue'
 import type { SelectOption } from '@/components/custom_ui/FormSelect'
 import { computed, onMounted } from 'vue'
 
-const { storeData, store: storeAccount } = useAccounts()
+const { storedData, store: storeCreditCard } = useCreditCards()
 const { fetchData: currencyData, fetch: fetchCurrencies } = useCurrency()
 const { toast } = useToast()
 
@@ -26,11 +26,10 @@ const currencyOptions = computed<SelectOption[]>(() =>
 
 const formSchema = toTypedSchema(
   z.object({
-    id: z.number().optional().nullable(),
+    id: z.string().optional().nullable(),
     name: z.string().min(1, 'Name is required'),
     currency: z.string().min(1, 'Currency is required'),
-    balance: z.number(),
-    default: z.boolean(),
+    limit: z.number().positive('Limit must be positive'),
   })
 )
 
@@ -40,24 +39,27 @@ const form = useForm({
     id: null,
     name: '',
     currency: 'USD',
-    balance: 0,
-    default: false,
+    limit: 0,
   },
 })
 
 const formSubmit = form.handleSubmit(async values => {
-  const newAccount: IAccountForm = {
+  const newCreditCard: ICreditCardForm = {
     id: null,
     name: values.name,
-    currency: values.currency,
-    balance: values.balance,
-    default: values.default,
+    limits: [
+      {
+        limit: values.limit,
+        used: 0,
+        currency: values.currency,
+      }
+    ],
   }
 
-  await storeAccount(newAccount)
+  await storeCreditCard(newCreditCard)
 
   toast({
-    description: 'Account has been added successfully.',
+    description: 'Credit card has been added successfully.',
   })
 
   form.resetForm({
@@ -65,8 +67,7 @@ const formSubmit = form.handleSubmit(async values => {
       id: null,
       name: '',
       currency: 'USD',
-      balance: 0,
-      default: false,
+      limit: 0,
     },
   })
 })
@@ -87,7 +88,7 @@ onMounted(async () => {
           <span class="text-destructive">*</span>
         </FormLabel>
         <FormControl>
-          <Input v-bind="componentField" type="text" class="w-full" placeholder="Enter account name" />
+          <Input v-bind="componentField" type="text" class="w-full" placeholder="Enter credit card name" />
         </FormControl>
       </FormItem>
     </FormField>
@@ -103,10 +104,10 @@ onMounted(async () => {
       class="mt-4"
     />
 
-    <FormField v-slot="{ componentField }" name="balance">
+    <FormField v-slot="{ componentField }" name="limit">
       <FormItem class="mt-4">
         <FormLabel>
-          Balance
+          Credit Limit
           <span class="text-destructive">*</span>
         </FormLabel>
         <FormControl>
@@ -115,17 +116,8 @@ onMounted(async () => {
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="default">
-      <FormItem class="mt-4 flex flex-row items-center space-x-3">
-        <FormControl>
-          <input type="checkbox" v-bind="componentField" class="h-4 w-4 rounded border-gray-300" />
-        </FormControl>
-        <FormLabel class="cursor-pointer">Set as default account</FormLabel>
-      </FormItem>
-    </FormField>
-
-    <Button variant="default" type="submit" class="mt-4" :disabled="storeData.isLoading || currencyData.isLoading">
-      <Spinner v-if="storeData.isLoading || currencyData.isLoading" />
+    <Button variant="default" type="submit" class="mt-4" :disabled="storedData.isLoading || currencyData.isLoading">
+      <Spinner v-if="storedData.isLoading || currencyData.isLoading" />
       <span v-else>Submit</span>
     </Button>
   </form>

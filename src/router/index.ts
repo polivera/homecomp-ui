@@ -6,9 +6,9 @@ import { EntryListView, EntryFormView } from "@/features/entries/views";
 import { ReminderListView, ReminderFormView, ReminderDetailView } from '@/features/reminders/views'
 import { CreditCardEntryFormView, CreditCardEntryListView, CreditCardFormView, CreditCardListView } from '@/features/credit_cards/views/';
 import { HouseholdEntryListView, HouseholdListView, HouseholdFormView } from '@/features/households/views/';
-import { MyAccountsListView } from '@/features/accounts/views/';
-import { MyProfileView } from '@/features/reminders/users/views/';
-import { CategoryListView } from '@/features/categories/views/';
+import { MyAccountsListView, MyAccountsFormView } from '@/features/accounts/views/';
+import { MyProfileView } from '@/features/users/views/';
+import { CategoryListView, CategoryFormView } from '@/features/categories/views/';
 
 
 
@@ -104,6 +104,11 @@ const router = createRouter({
             name: 'accounts-list',
             component: MyAccountsListView
         },
+        {
+            path: '/account/form',
+            name: 'account-add',
+            component: MyAccountsFormView
+        },
         // Users ----------------------------------------------
         {
             path: '/my-profile',
@@ -120,6 +125,11 @@ const router = createRouter({
             path: '/admin/category/list',
             name: 'category-list',
             component: CategoryListView
+        },
+        {
+            path: '/admin/category/form',
+            name: 'category-add',
+            component: CategoryFormView
         },
     ],
 })

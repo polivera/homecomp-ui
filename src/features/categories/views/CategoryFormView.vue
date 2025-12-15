@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CreditCardForm } from '@/features/credit_cards/components'
+import { CategoryForm } from '@/features/categories/components'
 import Button from '@/components/ui/button/Button.vue'
 import { ArrowLeftIcon } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
@@ -7,16 +7,16 @@ import { RouterLink } from 'vue-router'
 
 <template>
   <div class="flex justify-between items-center border-b">
-    <h1 class="text-xl font-bold py-2 text-primary">Credit Card Form - Add</h1>
+    <h1 class="text-xl font-bold py-2 text-primary">Category Form - Add</h1>
     <Button variant="outline" as-child>
-      <RouterLink to="/credit-card/list">
+      <RouterLink to="/admin/category/list">
         <ArrowLeftIcon />
         <span>Back</span>
       </RouterLink>
     </Button>
   </div>
   <div class="py-4">
-    <CreditCardForm />
+    <CategoryForm />
   </div>
 </template>
 
